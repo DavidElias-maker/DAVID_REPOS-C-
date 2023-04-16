@@ -9,5 +9,7 @@ namespace WebApiTransporte.Services.SucursalServices
         public Task<ActionResult<ColaboradorDto>> GetColaborador(string PrimerNombre, string PrimerApellido);
 
         public Task<ActionResult<Colaborador>> PostColaborador(ColaboradorDto colaboradorDTO);
+
+        public Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO);
     }
 }

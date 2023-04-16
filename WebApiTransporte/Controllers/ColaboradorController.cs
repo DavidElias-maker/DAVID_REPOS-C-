@@ -16,15 +16,17 @@ namespace WebApiTransporte.Controllers
     {
         private readonly IColaboradorService _ColaboradorService;
         private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
 
 
 
 
 
-        public ColaboradorController(IColaboradorService SucursalService, IMapper mapper)
+        public ColaboradorController(IColaboradorService SucursalService, IMapper mapper, ApplicationDbContext context)
         {
             this._ColaboradorService = SucursalService;
             this._mapper = mapper;
+            this._context = context;
         }
 
         [HttpPost]
@@ -48,6 +50,20 @@ namespace WebApiTransporte.Controllers
 
 
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO)
+        {
+            var ActualizarColaboradores = await _ColaboradorService.UpdateColaborador(colaboradorDTO);
+
+            return ActualizarColaboradores;
+
+            
+
+
+        }
+
+
 
 
     }

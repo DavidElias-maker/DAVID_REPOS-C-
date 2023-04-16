@@ -9,6 +9,7 @@ namespace WebApiTransporte.Utilities
         public AutoMapperProfiles()
         {
             CreateMap<ColaboradorDto, Colaborador>().ReverseMap();
+
         }
     }
 }

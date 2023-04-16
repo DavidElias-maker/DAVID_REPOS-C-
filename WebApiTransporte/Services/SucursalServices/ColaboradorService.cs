@@ -44,5 +44,25 @@ namespace WebApiTransporte.Services.SucursalServices
             await _context.SaveChangesAsync();
             return colaborador;
         }
+
+        public async Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO)
+        {
+            var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido);
+            if (ColaboradoresExistente == null)
+            {
+                return BadRequest("Colaborador no encontrado");
+            }
+
+            var colaborador = _mapper.Map<ColaboradorDto, Colaborador>(colaboradorDTO, ColaboradoresExistente);
+
+            _context.Update(colaborador);
+            await _context.SaveChangesAsync();
+            
+            return Ok("ingresado de forma exitosa");
+
+
+
+
+        }
     }
 }
