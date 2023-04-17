@@ -12,7 +12,7 @@ using WebApiTransporte.Services.SucursalServices;
 namespace WebApiTransporte.Controllers
 {
     [ApiController]
-    [Route("api/Transporte")]
+    [Route("api/Colaborador")]
     public class ColaboradorController : ControllerBase
     {
         private readonly IColaboradorService _ColaboradorService;
@@ -37,6 +37,7 @@ namespace WebApiTransporte.Controllers
             return Ok("ingresado de manera exitosa");
            
         }
+
         [HttpGet]
         [Route("api/Transporte/{PrimerNombre}/{PrimerApellido}")]
         public async Task<ActionResult<ColaboradorDto>> GetColaborador(string PrimerNombre, string PrimerApellido)

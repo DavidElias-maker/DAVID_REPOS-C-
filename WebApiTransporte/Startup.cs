@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
 using WebApiTransporte.Services.ColaboradorServices;
+using WebApiTransporte.Services.TransportistaServices;
 
 namespace WebApiTransporte
 {
@@ -22,6 +23,7 @@ namespace WebApiTransporte
 
             services.AddScoped<IColaboradorService, ColaboradorService>();
             services.AddScoped<ISucursalService, SucursalService>();
+            services.AddScoped<ITransportistaService, TransportistaService>();
             services.AddAutoMapper(typeof(Program).Assembly);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

@@ -11,6 +11,7 @@ namespace WebApiTransporte.Models
 
         public DbSet<Sucursal> sucursal { get; set; }
         public DbSet<Colaborador> colaborador { get; set; }
+        public DbSet<Transportista> transportista { get; set; }
     }
 
   
