@@ -10,6 +10,8 @@ namespace WebApiTransporte.Utilities
         {
             CreateMap<ColaboradorDto, Colaborador>().ReverseMap();
 
+            CreateMap<ColaboradorDeleteDto, Colaborador>().ReverseMap();
+
         }
     }
 }

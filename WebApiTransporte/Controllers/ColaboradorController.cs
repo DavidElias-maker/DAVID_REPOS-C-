@@ -19,9 +19,6 @@ namespace WebApiTransporte.Controllers
         private readonly ApplicationDbContext _context;
 
 
-
-
-
         public ColaboradorController(IColaboradorService SucursalService, IMapper mapper, ApplicationDbContext context)
         {
             this._ColaboradorService = SucursalService;
@@ -58,13 +55,17 @@ namespace WebApiTransporte.Controllers
 
             return ActualizarColaboradores;
 
-            
-
-
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteColaborador(ColaboradorDeleteDto colaboradorDeleteDTO)
+        {
 
+            var BorrarColaboradores = await _ColaboradorService.DeleteColaborador(colaboradorDeleteDTO);
 
+            return BorrarColaboradores;
+
+        }
 
     }
 

@@ -21,7 +21,7 @@ namespace WebApiTransporte.Services.SucursalServices
         }
         async Task<ActionResult<ColaboradorDto>> IColaboradorService.GetColaborador(string PrimerNombre, string PrimerApellido)
         {
-            var obtenercolaborador = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.PrimerApellido.Contains(PrimerApellido));
+            var obtenercolaborador = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.PrimerApellido.Contains(PrimerApellido) && x.Activo.Contains("si"));
             if (obtenercolaborador == null)
             {
 
@@ -32,7 +32,7 @@ namespace WebApiTransporte.Services.SucursalServices
 
          async Task<ActionResult<Colaborador>> IColaboradorService.PostColaborador(ColaboradorDto colaboradorDTO)
         {
-            var existeColaboradorConElmismoNombre = await _context.colaborador.AnyAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido);
+            var existeColaboradorConElmismoNombre = await _context.colaborador.AnyAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
 
             if (existeColaboradorConElmismoNombre)
             {
@@ -47,7 +47,7 @@ namespace WebApiTransporte.Services.SucursalServices
 
         public async Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO)
         {
-            var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido);
+            var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
             if (ColaboradoresExistente == null)
             {
                 return BadRequest("Colaborador no encontrado");
@@ -63,6 +63,24 @@ namespace WebApiTransporte.Services.SucursalServices
 
 
 
+        }
+
+        public async Task<ActionResult> DeleteColaborador(ColaboradorDeleteDto colaboradorDeleteDTO)
+        {
+            var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDeleteDTO.PrimerNombre && x.PrimerApellido == colaboradorDeleteDTO.PrimerApellido && x.Activo == "si");
+            if (ColaboradoresExistente == null)
+            {
+                return BadRequest("Colaborador no encontrado");
+            }
+
+            ColaboradoresExistente.Activo = "no";
+
+            var colaborador = _mapper.Map<ColaboradorDeleteDto, Colaborador>(colaboradorDeleteDTO, ColaboradoresExistente);
+
+            _context.Update(colaborador);
+            await _context.SaveChangesAsync();
+
+            return Ok("colaborador eliminado de forma exitosa");
         }
     }
 }

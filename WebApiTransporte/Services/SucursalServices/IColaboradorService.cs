@@ -11,5 +11,6 @@ namespace WebApiTransporte.Services.SucursalServices
         public Task<ActionResult<Colaborador>> PostColaborador(ColaboradorDto colaboradorDTO);
 
         public Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO);
+        public Task<ActionResult> DeleteColaborador(ColaboradorDeleteDto colaboradorDeleteDTO);
     }
 }
