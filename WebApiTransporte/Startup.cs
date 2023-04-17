@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
+using WebApiTransporte.Services.ColaboradorServices;
 
 namespace WebApiTransporte
 {
@@ -20,6 +21,7 @@ namespace WebApiTransporte
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
             services.AddScoped<IColaboradorService, ColaboradorService>();
+            services.AddScoped<ISucursalService, SucursalService>();
             services.AddAutoMapper(typeof(Program).Assembly);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

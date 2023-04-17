@@ -2,7 +2,7 @@
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Models;
 
-namespace WebApiTransporte.Services.SucursalServices
+namespace WebApiTransporte.Services.ColaboradorServices
 {
     public interface IColaboradorService
     {

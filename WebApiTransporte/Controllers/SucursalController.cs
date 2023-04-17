@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiTransporte.Dtos;
 using WebApiTransporte.Models;
+using WebApiTransporte.Services.SucursalServices;
 
 namespace WebApiTransporte.Controllers
 {
@@ -9,41 +11,49 @@ namespace WebApiTransporte.Controllers
     [Route("api/Sucursal")]
     public class SucursalController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ISucursalService _SucursalService;
 
-        public SucursalController(ApplicationDbContext context)
+        public SucursalController(ISucursalService SucursalService)
         {
-            this._context = context;
+            this._SucursalService = SucursalService;
 
         }
         [HttpPost]
-        public async Task<ActionResult> Post(Sucursal PostSucursal)
+        public async Task<ActionResult> PostSucursal(SucursalDto sucursalDTO)
         {
-
-            var sucursal = new Sucursal()
+            var IngresarSucursales = await _SucursalService.PostSucursal(sucursalDTO);
+            if (IngresarSucursales is null)
             {
-                Id = PostSucursal.Id,
-                Nombre = PostSucursal.Nombre,
-                Direccion = PostSucursal.Direccion,
-                Activo = PostSucursal.Activo
+                return BadRequest($"Ya existe una Sucursal con el mismo nombre");
+            }
+            return Ok("ingresado de manera exitosa");
 
+        }
+        [HttpGet]
+        public async Task<ActionResult<SucursalDto>> GetSucursal(string Nombre)
+        {
+            var ObtenerSucursales = await _SucursalService.GetSucursal(Nombre);
 
-            };
-
-            await _context.sucursal.AddAsync(sucursal);
-            await _context.SaveChangesAsync();
-            return Ok();
+            return ObtenerSucursales;
         }
 
-        [HttpGet("nombre")] // tambien se puede usar caracteres, solo hay que 
-        public async Task<ActionResult<Sucursal>> Get(string Nombre)
+        [HttpDelete]
+        public async Task<ActionResult> DeleteSucursal(SucursalDeleteDto sucursalDeleteDTO)
         {
-            var autor = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre.Contains(Nombre));
-            if (autor == null)
-            {
-                return NotFound(); // cuando se tiene un recurso que no ha sigo encontrado se coloca esta funcion not found
-            }
-            return autor; // el return nos regresa un valor y es necesario
+
+            var BorrarSucursales = await _SucursalService.DeleteSucursal(sucursalDeleteDTO);
+
+            return BorrarSucursales;
+
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateSucursal(SucursalDto sucursalDTO)
+        {
+            var ActualizarSucursales = await _SucursalService.UpdateSucursal(sucursalDTO);
+
+            return ActualizarSucursales;
+
         }
 
     }

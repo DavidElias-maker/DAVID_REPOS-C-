@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Models;
-namespace WebApiTransporte.Services.SucursalServices
+namespace WebApiTransporte.Services.ColaboradorServices
 
 {
     public class ColaboradorService : ControllerBase, IColaboradorService
@@ -33,7 +33,7 @@ namespace WebApiTransporte.Services.SucursalServices
             }
             catch
             {
-                return BadRequest("Se produjo un error de conexion");
+                return NotFound("Se produjo un error de conexion");
             }
         }
 
@@ -55,7 +55,7 @@ namespace WebApiTransporte.Services.SucursalServices
             }
             catch
             {
-                return BadRequest("Se produjo un error de conexion");
+                return NotFound("Se produjo un error de conexion");
             }
         }
 
@@ -66,7 +66,7 @@ namespace WebApiTransporte.Services.SucursalServices
                 var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
                 if (ColaboradoresExistente == null)
                 {
-                    return BadRequest("Colaborador no encontrado");
+                    return NotFound("Colaborador no encontrado");
                 }
 
                 var colaborador = _mapper.Map<ColaboradorDto, Colaborador>(colaboradorDTO, ColaboradoresExistente);
@@ -79,7 +79,7 @@ namespace WebApiTransporte.Services.SucursalServices
             }
             catch
             {
-                return BadRequest("Se produjo un error de conexion");
+                return NotFound("Se produjo un error de conexion");
             }
 
 
@@ -106,7 +106,7 @@ namespace WebApiTransporte.Services.SucursalServices
             }
             catch
             {
-                return BadRequest("Se produjo un error de conexion");
+                return NotFound("Se produjo un error de conexion");
             }
         }
     }

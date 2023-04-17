@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Web.Http.Description;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Models;
+using WebApiTransporte.Services.ColaboradorServices;
 using WebApiTransporte.Services.SucursalServices;
 
 namespace WebApiTransporte.Controllers
@@ -15,11 +16,13 @@ namespace WebApiTransporte.Controllers
     public class ColaboradorController : ControllerBase
     {
         private readonly IColaboradorService _ColaboradorService;
+       
       
 
-        public ColaboradorController(IColaboradorService SucursalService)
+        public ColaboradorController(IColaboradorService ColaboradorService)
         {
-            this._ColaboradorService = SucursalService;
+            this._ColaboradorService = ColaboradorService;
+            
            
         }
 
