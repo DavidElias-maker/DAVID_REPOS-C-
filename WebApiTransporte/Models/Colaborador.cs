@@ -15,6 +15,6 @@ namespace WebApiTransporte.Models
         public DateTime FechaNacimiento { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
-        public string Activo { get; set; } = "si";
+        public Boolean Activo { get; set; } = true;
     }
 }

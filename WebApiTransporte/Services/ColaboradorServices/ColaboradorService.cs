@@ -19,29 +19,13 @@ namespace WebApiTransporte.Services.ColaboradorServices
             this._mapper = mapper;
 
         }
-        async Task<ActionResult<ColaboradorDto>> IColaboradorService.GetColaborador(string PrimerNombre, string PrimerApellido)
-        {
-            try
-            {
-                var obtenercolaborador = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.PrimerApellido.Contains(PrimerApellido) && x.Activo.Contains("si"));
-                if (obtenercolaborador == null)
-                {
-
-                    return BadRequest($"El nombre y apellido: {PrimerNombre} {PrimerApellido} no ha sido encontrado en la lista de colaboradores");
-                }
-                return _mapper.Map<ColaboradorDto>(obtenercolaborador);
-            }
-            catch
-            {
-                return NotFound("Se produjo un error de conexion");
-            }
-        }
+      
 
          async Task<ActionResult<Colaborador>> IColaboradorService.PostColaborador(ColaboradorDto colaboradorDTO)
         {
             try
             {
-                var existeColaboradorConElmismoNombre = await _context.colaborador.AnyAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
+                var existeColaboradorConElmismoNombre = await _context.colaborador.AnyAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == true);
 
                 if (existeColaboradorConElmismoNombre)
                 {
@@ -63,7 +47,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
         {
             try
             {
-                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
+                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == true);
                 if (ColaboradoresExistente == null)
                 {
                     return NotFound("Colaborador no encontrado");
@@ -89,13 +73,13 @@ namespace WebApiTransporte.Services.ColaboradorServices
         {
             try
             {
-                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDeleteDTO.PrimerNombre && x.PrimerApellido == colaboradorDeleteDTO.PrimerApellido && x.Activo == "si");
+                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDeleteDTO.PrimerNombre && x.PrimerApellido == colaboradorDeleteDTO.PrimerApellido && x.Activo == true);
                 if (ColaboradoresExistente == null)
                 {
                     return BadRequest("Colaborador no encontrado");
                 }
 
-                ColaboradoresExistente.Activo = "no";
+                ColaboradoresExistente.Activo = false;
 
                 var colaborador = _mapper.Map<ColaboradorDeleteDto, Colaborador>(colaboradorDeleteDTO, ColaboradoresExistente);
 
@@ -103,6 +87,28 @@ namespace WebApiTransporte.Services.ColaboradorServices
                 await _context.SaveChangesAsync();
 
                 return Ok("colaborador eliminado de forma exitosa");
+            }
+            catch
+            {
+                return NotFound("Se produjo un error de conexion");
+            }
+        }
+
+        public async Task<ActionResult<ColaboradorDto>> GetColaborador()
+        {
+            try
+            {
+
+                // return Ok(_context.colaborador.Select(x => _mapper.Map<ColaboradorDto>(x)).Where(x => x.Activo == colaborador.Activo = true);
+
+               var colaborador = await _context.colaborador.Where(x=>x.Activo == true).ToListAsync();
+
+               return _mapper.Map<ColaboradorDto>(colaborador);
+
+
+
+
+
             }
             catch
             {

@@ -8,6 +8,6 @@ namespace WebApiTransporte.Models
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
         public string Direccion { get; set; }
-        public string Activo { get; set; } = "si";
+        public Boolean Activo { get; set; } = true;
     }
 }

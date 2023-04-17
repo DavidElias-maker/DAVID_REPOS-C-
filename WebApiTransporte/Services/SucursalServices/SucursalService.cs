@@ -22,13 +22,13 @@ namespace WebApiTransporte.Services.SucursalServices
         {
             try
             {
-                var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDeleteDTO.Nombre &&  x.Activo == "si");
+                var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDeleteDTO.Nombre &&  x.Activo == true);
                 if (SucursalesExistente == null)
                 {
                     return BadRequest("Sucursal no encontrada");
                 }
 
-                SucursalesExistente.Activo = "no";
+                SucursalesExistente.Activo = false;
 
                 var sucursal = _mapper.Map<SucursalDeleteDto, Sucursal>(sucursalDeleteDTO, SucursalesExistente);
 
@@ -47,7 +47,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
             try
             {
-                var obtenersucursal = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre.Contains(Nombre) && x.Activo.Contains("si"));
+                var obtenersucursal = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre.Contains(Nombre) && x.Activo == true);
                 if (obtenersucursal == null)
                 {
 
@@ -65,7 +65,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
             try
             {
-                var existeSucursalConElmismoNombre = await _context.sucursal.AnyAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo.Contains("si"));
+                var existeSucursalConElmismoNombre = await _context.sucursal.AnyAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
 
                 if (existeSucursalConElmismoNombre)
                 {
@@ -87,7 +87,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
                 try
                 {
-                    var SucursalExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == "si");
+                    var SucursalExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
                     if (SucursalExistente == null)
                     {
                         return NotFound("Sucursal no encontrado");

@@ -12,7 +12,7 @@ using WebApiTransporte.Models;
 namespace WebApiTransporte.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230417173653_Inital")]
+    [Migration("20230417222608_Inital")]
     partial class Inital
     {
         /// <inheritdoc />
@@ -33,9 +33,8 @@ namespace WebApiTransporte.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Activo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<string>("DNI")
                         .IsRequired()
@@ -73,9 +72,8 @@ namespace WebApiTransporte.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Activo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
@@ -98,9 +96,8 @@ namespace WebApiTransporte.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Activo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("datetime2");

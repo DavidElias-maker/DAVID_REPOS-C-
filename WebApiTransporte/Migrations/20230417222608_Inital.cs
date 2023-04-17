@@ -23,7 +23,7 @@ namespace WebApiTransporte.Migrations
                     FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Activo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,7 +38,7 @@ namespace WebApiTransporte.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Activo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +54,7 @@ namespace WebApiTransporte.Migrations
                     PrimerNombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Activo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
                     Tarifa = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>

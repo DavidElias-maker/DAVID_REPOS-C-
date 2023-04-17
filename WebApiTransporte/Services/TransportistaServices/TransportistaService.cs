@@ -24,12 +24,12 @@ namespace WebApiTransporte.Services.TransportistaServices
         {
             try
             {
-                var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == transportistaDeleteDTO.PrimerNombre && x.Activo == "si");
+                var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == transportistaDeleteDTO.PrimerNombre && x.Activo == true);
                 if (TransportistaExistente == null)
                 {
                     return BadRequest("Transportista no encontrado");
                 }
-                TransportistaExistente.Activo = "no";
+                TransportistaExistente.Activo = false;
 
                 var transportista = _mapper.Map<TransportistaDeleteDto, Transportista>(transportistaDeleteDTO, TransportistaExistente);
 
@@ -48,7 +48,7 @@ namespace WebApiTransporte.Services.TransportistaServices
         {
             try
             {
-                var obtenertransportista = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.Activo.Contains("si"));
+                var obtenertransportista = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.Activo == true);
                 if (obtenertransportista == null)
                 {
 
@@ -66,7 +66,7 @@ namespace WebApiTransporte.Services.TransportistaServices
         {
             try
             {
-                var existeTransportistaConElmismoNombre = await _context.transportista.AnyAsync(x => x.PrimerNombre == transportistaDTO.PrimerNombre && x.Activo.Contains("si"));
+                var existeTransportistaConElmismoNombre = await _context.transportista.AnyAsync(x => x.PrimerNombre == transportistaDTO.PrimerNombre && x.Activo == true);
 
                 if (existeTransportistaConElmismoNombre)
                 {
@@ -88,7 +88,7 @@ namespace WebApiTransporte.Services.TransportistaServices
         {
                 try
                 {
-                    var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == TransportistaDTO.PrimerNombre && x.Activo == "si");
+                    var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == TransportistaDTO.PrimerNombre && x.Activo == true);
                     if (TransportistaExistente == null)
                     {
                         return NotFound("Transportista no encontrado");

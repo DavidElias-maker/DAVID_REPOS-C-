@@ -39,12 +39,11 @@ namespace WebApiTransporte.Controllers
         }
 
         [HttpGet]
-        [Route("api/Transporte/{PrimerNombre}/{PrimerApellido}")]
-        public async Task<ActionResult<ColaboradorDto>> GetColaborador(string PrimerNombre, string PrimerApellido)
+        public async Task<ActionResult<ColaboradorDto>> GetColaborador()
         {
-            var ObtenerColaboradores = await _ColaboradorService.GetColaborador(PrimerNombre, PrimerApellido);
+            var ObtenerColaboradores = await _ColaboradorService.GetColaborador();
 
-            return ObtenerColaboradores;
+            return Ok(ObtenerColaboradores);
 
 
         }
