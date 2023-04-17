@@ -21,66 +21,93 @@ namespace WebApiTransporte.Services.SucursalServices
         }
         async Task<ActionResult<ColaboradorDto>> IColaboradorService.GetColaborador(string PrimerNombre, string PrimerApellido)
         {
-            var obtenercolaborador = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.PrimerApellido.Contains(PrimerApellido) && x.Activo.Contains("si"));
-            if (obtenercolaborador == null)
+            try
             {
+                var obtenercolaborador = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.PrimerApellido.Contains(PrimerApellido) && x.Activo.Contains("si"));
+                if (obtenercolaborador == null)
+                {
 
-                return BadRequest($"El nombre y apellido: {PrimerNombre} {PrimerApellido} no ha sido encontrado en la lista de colaboradores");
+                    return BadRequest($"El nombre y apellido: {PrimerNombre} {PrimerApellido} no ha sido encontrado en la lista de colaboradores");
+                }
+                return _mapper.Map<ColaboradorDto>(obtenercolaborador);
             }
-            return _mapper.Map<ColaboradorDto>(obtenercolaborador);
+            catch
+            {
+                return BadRequest("Se produjo un error de conexion");
+            }
         }
 
          async Task<ActionResult<Colaborador>> IColaboradorService.PostColaborador(ColaboradorDto colaboradorDTO)
         {
-            var existeColaboradorConElmismoNombre = await _context.colaborador.AnyAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
-
-            if (existeColaboradorConElmismoNombre)
+            try
             {
-                return null;
-            }
-            var colaborador = _mapper.Map<Colaborador>(colaboradorDTO);
+                var existeColaboradorConElmismoNombre = await _context.colaborador.AnyAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
 
-            _context.Add(colaborador);
-            await _context.SaveChangesAsync();
-            return colaborador;
+                if (existeColaboradorConElmismoNombre)
+                {
+                    return null;
+                }
+                var colaborador = _mapper.Map<Colaborador>(colaboradorDTO);
+
+                _context.Add(colaborador);
+                await _context.SaveChangesAsync();
+                return colaborador;
+            }
+            catch
+            {
+                return BadRequest("Se produjo un error de conexion");
+            }
         }
 
         public async Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO)
         {
-            var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
-            if (ColaboradoresExistente == null)
+            try
             {
-                return BadRequest("Colaborador no encontrado");
+                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == "si");
+                if (ColaboradoresExistente == null)
+                {
+                    return BadRequest("Colaborador no encontrado");
+                }
+
+                var colaborador = _mapper.Map<ColaboradorDto, Colaborador>(colaboradorDTO, ColaboradoresExistente);
+
+                _context.Update(colaborador);
+                await _context.SaveChangesAsync();
+
+                return Ok("Actualizado de forma exitosa");
+
             }
-
-            var colaborador = _mapper.Map<ColaboradorDto, Colaborador>(colaboradorDTO, ColaboradoresExistente);
-
-            _context.Update(colaborador);
-            await _context.SaveChangesAsync();
-            
-            return Ok("ingresado de forma exitosa");
-
-
+            catch
+            {
+                return BadRequest("Se produjo un error de conexion");
+            }
 
 
         }
 
         public async Task<ActionResult> DeleteColaborador(ColaboradorDeleteDto colaboradorDeleteDTO)
         {
-            var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDeleteDTO.PrimerNombre && x.PrimerApellido == colaboradorDeleteDTO.PrimerApellido && x.Activo == "si");
-            if (ColaboradoresExistente == null)
+            try
             {
-                return BadRequest("Colaborador no encontrado");
+                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDeleteDTO.PrimerNombre && x.PrimerApellido == colaboradorDeleteDTO.PrimerApellido && x.Activo == "si");
+                if (ColaboradoresExistente == null)
+                {
+                    return BadRequest("Colaborador no encontrado");
+                }
+
+                ColaboradoresExistente.Activo = "no";
+
+                var colaborador = _mapper.Map<ColaboradorDeleteDto, Colaborador>(colaboradorDeleteDTO, ColaboradoresExistente);
+
+                _context.Update(colaborador);
+                await _context.SaveChangesAsync();
+
+                return Ok("colaborador eliminado de forma exitosa");
             }
-
-            ColaboradoresExistente.Activo = "no";
-
-            var colaborador = _mapper.Map<ColaboradorDeleteDto, Colaborador>(colaboradorDeleteDTO, ColaboradoresExistente);
-
-            _context.Update(colaborador);
-            await _context.SaveChangesAsync();
-
-            return Ok("colaborador eliminado de forma exitosa");
+            catch
+            {
+                return BadRequest("Se produjo un error de conexion");
+            }
         }
     }
 }

@@ -15,15 +15,12 @@ namespace WebApiTransporte.Controllers
     public class ColaboradorController : ControllerBase
     {
         private readonly IColaboradorService _ColaboradorService;
-        private readonly IMapper _mapper;
-        private readonly ApplicationDbContext _context;
+      
 
-
-        public ColaboradorController(IColaboradorService SucursalService, IMapper mapper, ApplicationDbContext context)
+        public ColaboradorController(IColaboradorService SucursalService)
         {
             this._ColaboradorService = SucursalService;
-            this._mapper = mapper;
-            this._context = context;
+           
         }
 
         [HttpPost]
@@ -34,7 +31,7 @@ namespace WebApiTransporte.Controllers
             {
                 return BadRequest($"Ya existe un colaborador con el mismo nombre");
             }
-            return Ok();
+            return Ok("ingresado de manera exitosa");
            
         }
         [HttpGet]
