@@ -58,24 +58,27 @@ namespace WebApiTransporte.Services.TransportistaServices
 
         async Task<ActionResult<Transportista>> ITransportistaService.PostTransportista(TransportistaDto transportistaDTO)
         {
-            try
-            {
-                var existeTransportistaConElmismoNombre = await _context.transportista.AnyAsync(x => x.PrimerNombre == transportistaDTO.PrimerNombre && x.Activo == true);
-
-                if (existeTransportistaConElmismoNombre)
+           
+                try
                 {
-                    return null;
-                }
-                var transportista = _mapper.Map<Transportista>(transportistaDTO);
+                    var existeColaboradorConElmismoNombre = await _context.transportista.AnyAsync(x => x.PrimerNombre == transportistaDTO.PrimerNombre && x.Activo == true);
 
-                _context.Add(transportista);
-                await _context.SaveChangesAsync();
-                return transportista;
-            }
-            catch
-            {
-                return NotFound("Se produjo un error de conexion");
-            }
+                    if (existeColaboradorConElmismoNombre)
+                    {
+                        return BadRequest("La sucursal ya existe");
+                    }
+                    var transportista = _mapper.Map<Transportista>(transportistaDTO);
+
+                    _context.Add(transportista);
+                    await _context.SaveChangesAsync();
+                    return transportista;
+                }
+                catch
+                {
+                    return NotFound("Se produjo un error de conexion");
+                }
+            
+            
         }
 
        async Task<ActionResult> ITransportistaService.UpdateTransportista(TransportistaDto TransportistaDTO)

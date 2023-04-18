@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
+using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
 using WebApiTransporte.Services.TransportistaServices;
 
@@ -18,14 +19,11 @@ namespace WebApiTransporte.Controllers
 
         }
         [HttpPost]
-        public async Task<ActionResult> PostTransportista(TransportistaDto transportistaDTO)
-        {
-            var IngresarTransportistas = await _TransportistaService.PostTransportista(transportistaDTO);
-            if (IngresarTransportistas is null)
-            {
-                return BadRequest($"Ya existe un transportista con el mismo nombre");
-            }
-            return Ok("ingresado de manera exitosa");
+        public async Task<ActionResult<Transportista>> PostTransportista(TransportistaDto transportistaDTO)
+        { 
+            var IngresarTransportista = await _TransportistaService.PostTransportista(transportistaDTO);
+
+            return IngresarTransportista;
 
         }
         [HttpGet]

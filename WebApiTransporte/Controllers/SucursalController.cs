@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.ColaboradorDtos;
+using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
 
@@ -19,14 +21,11 @@ namespace WebApiTransporte.Controllers
 
         }
         [HttpPost]
-        public async Task<ActionResult> PostSucursal(SucursalDto sucursalDTO)
+        public async Task<ActionResult<Sucursal>> PostSucursal(SucursalDto sucursalDTO)
         {
             var IngresarSucursales = await _SucursalService.PostSucursal(sucursalDTO);
-            if (IngresarSucursales is null)
-            {
-                return BadRequest($"Ya existe una Sucursal con el mismo nombre");
-            }
-            return Ok("ingresado de manera exitosa");
+
+            return IngresarSucursales;
 
         }
         [HttpGet]
@@ -36,6 +35,16 @@ namespace WebApiTransporte.Controllers
             var BuscarSucursales = await _SucursalService.GetSucursal();
 
             return BuscarSucursales;
+
+        }
+
+        [HttpGet("SucursalColaborador")]
+        public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
+        {
+
+            var BuscarSucursalesColaboradores = await _SucursalService.GetSucursalColaborador();
+
+            return BuscarSucursalesColaboradores;
 
         }
 

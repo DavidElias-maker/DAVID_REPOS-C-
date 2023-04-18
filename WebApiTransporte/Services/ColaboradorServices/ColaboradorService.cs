@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.ColaboradorDtos;
 using WebApiTransporte.Models;
 namespace WebApiTransporte.Services.ColaboradorServices
 
@@ -29,7 +30,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
 
                 if (existeColaboradorConElmismoNombre)
                 {
-                    return null;
+                    return BadRequest("El colaborador ya existe");
                 }
                 var colaborador = _mapper.Map<Colaborador>(colaboradorDTO);
 
@@ -103,6 +104,20 @@ namespace WebApiTransporte.Services.ColaboradorServices
             if (colaborador != null)
             {
                 resp = _mapper.Map<List<Colaborador>, List<ColaboradorDto>>(colaborador);
+            }
+            return resp;
+
+        }
+
+        public async Task<List<ColaboradorSucursalDto>> GetColaboradorSucursal()
+        {
+
+            List<ColaboradorSucursalDto> resp = new List<ColaboradorSucursalDto>();
+
+            var colaborador = await _context.colaborador.Where(x => x.Activo == true).ToListAsync();
+            if (colaborador != null)
+            {
+                resp = _mapper.Map<List<Colaborador>, List<ColaboradorSucursalDto>>(colaborador);
             }
             return resp;
 

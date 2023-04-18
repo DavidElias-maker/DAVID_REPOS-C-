@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Runtime.CompilerServices;
 using System.Web.Http.Description;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.ColaboradorDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
 using WebApiTransporte.Services.SucursalServices;
@@ -31,14 +32,11 @@ namespace WebApiTransporte.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostColaborador(ColaboradorDto colaboradorDTO)
+        public async Task<ActionResult<Colaborador>> PostColaborador(ColaboradorDto colaboradorDTO)
         {
             var IngresarColaboradores = await _ColaboradorService.PostColaborador(colaboradorDTO);
-            if (IngresarColaboradores is null)
-            {
-                return BadRequest($"Ya existe un colaborador con el mismo nombre");
-            }
-            return Ok("ingresado de manera exitosa");
+
+            return IngresarColaboradores;
            
         }
 
@@ -49,6 +47,16 @@ namespace WebApiTransporte.Controllers
             var BuscarColaboradores = await _ColaboradorService.GetColaborador();
 
             return BuscarColaboradores;
+
+        }
+
+        [HttpGet("ColaboradorSucursal")]
+        public async Task<List<ColaboradorSucursalDto>> GetColaboradorSucursal()
+        {
+
+            var BuscarColaboradoresSucursales = await _ColaboradorService.GetColaboradorSucursal();
+
+            return BuscarColaboradoresSucursales;
 
         }
 

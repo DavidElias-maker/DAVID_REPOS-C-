@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.ColaboradorDtos;
 using WebApiTransporte.Models;
+using WebApiTransporte.Dtos.SucursalDtos;
 
 namespace WebApiTransporte.Services.SucursalServices
 {
@@ -22,7 +24,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
             try
             {
-                var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDeleteDTO.Nombre &&  x.Activo == true);
+                var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDeleteDTO.Nombre && x.Activo == true);
                 if (SucursalesExistente == null)
                 {
                     return BadRequest("Sucursal no encontrada");
@@ -43,6 +45,18 @@ namespace WebApiTransporte.Services.SucursalServices
             }
         }
 
+        public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
+        {
+            List<SucursalColaboradorDto> resp = new List<SucursalColaboradorDto>();
+
+            var Sucursal = await _context.sucursal.Where(x => x.Activo == true).ToListAsync();
+            if (Sucursal != null)
+            {
+                resp = _mapper.Map<List<Sucursal>, List<SucursalColaboradorDto>>(Sucursal);
+            }
+            return resp;
+        }
+
         public async Task<List<SucursalDto>> GetSucursal()
         {
             List<SucursalDto> resp = new List<SucursalDto>();
@@ -55,15 +69,17 @@ namespace WebApiTransporte.Services.SucursalServices
             return resp;
         }
 
+       
+
         public async Task<ActionResult<Sucursal>> PostSucursal(SucursalDto sucursalDTO)
         {
             try
             {
-                var existeSucursalConElmismoNombre = await _context.sucursal.AnyAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
+                var existeColaboradorConElmismoNombre = await _context.sucursal.AnyAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
 
-                if (existeSucursalConElmismoNombre)
+                if (existeColaboradorConElmismoNombre)
                 {
-                    return null;
+                    return BadRequest("La sucursal ya existe");
                 }
                 var sucursal = _mapper.Map<Sucursal>(sucursalDTO);
 
@@ -76,7 +92,8 @@ namespace WebApiTransporte.Services.SucursalServices
                 return NotFound("Se produjo un error de conexion");
             }
         }
-
+    
+    
         public async Task<ActionResult> UpdateSucursal(SucursalDto sucursalDTO)
         {
                 try
@@ -100,8 +117,8 @@ namespace WebApiTransporte.Services.SucursalServices
                     return NotFound("Se produjo un error de conexion");
                 }
 
+           
 
-            
         }
     }
 }
