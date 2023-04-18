@@ -20,9 +20,9 @@ namespace WebApiTransporte.Services.ColaboradorServices
             this._mapper = mapper;
 
         }
-      
 
-         async Task<ActionResult<Colaborador>> IColaboradorService.PostColaborador(ColaboradorDto colaboradorDTO)
+
+        async Task<ActionResult<Colaborador>> IColaboradorService.PostColaborador(ColaboradorDto colaboradorDTO)
         {
             try
             {
@@ -120,6 +120,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
                 resp = _mapper.Map<List<Colaborador>, List<ColaboradorSucursalDto>>(colaborador);
             }
             return resp;
+
 
         }
     }

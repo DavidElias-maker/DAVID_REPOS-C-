@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
-using WebApiTransporte.Dtos.ColaboradorDtos;
-using WebApiTransporte.Models;
 using WebApiTransporte.Dtos.SucursalDtos;
+using WebApiTransporte.Models;
+
 
 namespace WebApiTransporte.Services.SucursalServices
 {
@@ -45,17 +45,6 @@ namespace WebApiTransporte.Services.SucursalServices
             }
         }
 
-        public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
-        {
-            List<SucursalColaboradorDto> resp = new List<SucursalColaboradorDto>();
-
-            var Sucursal = await _context.sucursal.Where(x => x.Activo == true).ToListAsync();
-            if (Sucursal != null)
-            {
-                resp = _mapper.Map<List<Sucursal>, List<SucursalColaboradorDto>>(Sucursal);
-            }
-            return resp;
-        }
 
         public async Task<List<SucursalDto>> GetSucursal()
         {
@@ -69,7 +58,17 @@ namespace WebApiTransporte.Services.SucursalServices
             return resp;
         }
 
-       
+        public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
+        {
+            List<SucursalColaboradorDto> resp = new List<SucursalColaboradorDto>();
+
+            var Sucursal = await _context.sucursal.Where(x => x.Activo == true).ToListAsync();
+            if (Sucursal != null)
+            {
+                resp = _mapper.Map<List<Sucursal>, List<SucursalColaboradorDto>>(Sucursal);
+            }
+            return resp;
+        }
 
         public async Task<ActionResult<Sucursal>> PostSucursal(SucursalDto sucursalDTO)
         {

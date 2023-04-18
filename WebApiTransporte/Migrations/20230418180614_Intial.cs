@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApiTransporte.Migrations
 {
     /// <inheritdoc />
-    public partial class Inital : Migration
+    public partial class Intial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,6 +46,22 @@ namespace WebApiTransporte.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "sucursal_colaborador",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ColaboradorId = table.Column<int>(type: "int", nullable: false),
+                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    DistanciaKm = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sucursal_colaborador", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "transportista",
                 columns: table => new
                 {
@@ -71,6 +87,9 @@ namespace WebApiTransporte.Migrations
 
             migrationBuilder.DropTable(
                 name: "sucursal");
+
+            migrationBuilder.DropTable(
+                name: "sucursal_colaborador");
 
             migrationBuilder.DropTable(
                 name: "transportista");

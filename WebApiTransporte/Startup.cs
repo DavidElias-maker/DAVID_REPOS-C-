@@ -4,6 +4,7 @@ using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
 using WebApiTransporte.Services.ColaboradorServices;
 using WebApiTransporte.Services.TransportistaServices;
+using WebApiTransporte.Services.Sucursal_ColaboradorServices;
 
 namespace WebApiTransporte
 {
@@ -24,6 +25,7 @@ namespace WebApiTransporte
             services.AddScoped<IColaboradorService, ColaboradorService>();
             services.AddScoped<ISucursalService, SucursalService>();
             services.AddScoped<ITransportistaService, TransportistaService>();
+            services.AddScoped<ISucursal_ColaboradorService, Sucursal_ColaboradorService>();
             services.AddAutoMapper(typeof(Program).Assembly);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
@@ -52,6 +53,16 @@ namespace WebApiTransporte.Controllers
             var ActualizarTransportistas = await _TransportistaService.UpdateTransportista(transportistaDTO);
 
             return ActualizarTransportistas;
+
+        }
+
+        [HttpGet("TransportistaViaje")]
+        public async Task<List<TransportistaViajeDto>> GetTransportistaViaje()
+        {
+
+            var BuscarTransportistaViaje = await _TransportistaService.GetTransportistaViaje();
+
+            return BuscarTransportistaViaje;
 
         }
     }

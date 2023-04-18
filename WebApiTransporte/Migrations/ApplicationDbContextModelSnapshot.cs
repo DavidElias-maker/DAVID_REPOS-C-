@@ -85,6 +85,31 @@ namespace WebApiTransporte.Migrations
                     b.ToTable("sucursal");
                 });
 
+            modelBuilder.Entity("WebApiTransporte.Models.Sucursal_Colaborador", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ColaboradorId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("DistanciaKm")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SucursalId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sucursal_colaborador");
+                });
+
             modelBuilder.Entity("WebApiTransporte.Models.Transportista", b =>
                 {
                     b.Property<int>("Id")

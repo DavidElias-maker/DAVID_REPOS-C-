@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiTransporte.Dtos;
-using WebApiTransporte.Dtos.ColaboradorDtos;
 using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Models;
 

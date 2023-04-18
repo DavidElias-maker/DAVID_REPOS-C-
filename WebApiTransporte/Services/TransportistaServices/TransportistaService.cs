@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
@@ -104,5 +105,17 @@ namespace WebApiTransporte.Services.TransportistaServices
                     return NotFound("Se produjo un error de conexion");
                 }
             }
+
+        public async Task<List<TransportistaViajeDto>> GetTransportistaViaje()
+        {
+            List<TransportistaViajeDto> resp = new List<TransportistaViajeDto>();
+
+            var transportista = await _context.transportista.Where(x => x.Activo == true).ToListAsync();
+            if (transportista != null)
+            {
+                resp = _mapper.Map<List<Transportista>, List<TransportistaViajeDto>>(transportista);
+            }
+            return resp;
+        }
     }
 }

@@ -50,15 +50,6 @@ namespace WebApiTransporte.Controllers
 
         }
 
-        [HttpGet("ColaboradorSucursal")]
-        public async Task<List<ColaboradorSucursalDto>> GetColaboradorSucursal()
-        {
-
-            var BuscarColaboradoresSucursales = await _ColaboradorService.GetColaboradorSucursal();
-
-            return BuscarColaboradoresSucursales;
-
-        }
 
         [HttpPut]
         public async Task<ActionResult> UpdateColaborador(ColaboradorDto colaboradorDTO)
@@ -76,6 +67,16 @@ namespace WebApiTransporte.Controllers
             var BorrarColaboradores = await _ColaboradorService.DeleteColaborador(colaboradorDeleteDTO);
 
             return BorrarColaboradores;
+
+        }
+
+        [HttpGet("ColaboradorSucursal")]
+        public async Task<List<ColaboradorSucursalDto>> GetColaboradorSucursal()
+        {
+
+            var BuscarColaboradoresSucursales = await _ColaboradorService.GetColaboradorSucursal();
+
+            return BuscarColaboradoresSucursales;
 
         }
 

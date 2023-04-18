@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
-using WebApiTransporte.Dtos.ColaboradorDtos;
 using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
@@ -38,15 +37,7 @@ namespace WebApiTransporte.Controllers
 
         }
 
-        [HttpGet("SucursalColaborador")]
-        public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
-        {
-
-            var BuscarSucursalesColaboradores = await _SucursalService.GetSucursalColaborador();
-
-            return BuscarSucursalesColaboradores;
-
-        }
+        
 
         [HttpDelete]
         public async Task<ActionResult> DeleteSucursal(SucursalDeleteDto sucursalDeleteDTO)
@@ -64,6 +55,16 @@ namespace WebApiTransporte.Controllers
             var ActualizarSucursales = await _SucursalService.UpdateSucursal(sucursalDTO);
 
             return ActualizarSucursales;
+
+        }
+
+        [HttpGet("SucursalColaborador")]
+        public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
+        {
+
+            var BuscarSucursalesColaboradores = await _SucursalService.GetSucursalColaborador();
+
+            return BuscarSucursalesColaboradores;
 
         }
 

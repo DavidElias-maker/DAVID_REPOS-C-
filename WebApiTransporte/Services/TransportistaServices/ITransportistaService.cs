@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
 using WebApiTransporte.Models;
 
@@ -13,5 +14,6 @@ namespace WebApiTransporte.Services.TransportistaServices
 
         public Task<ActionResult> UpdateTransportista(TransportistaDto TransportistaDTO);
         public Task<ActionResult> DeleteTransportista(TransportistaDeleteDto transportistaDeleteDTO);
+        public Task<List<TransportistaViajeDto>> GetTransportistaViaje();
     }
 }

@@ -17,15 +17,20 @@ namespace WebApiTransporte.Utilities
 
             CreateMap<ColaboradorSucursalDto, Colaborador>().ReverseMap();
 
+
             CreateMap<SucursalDto, Sucursal>().ReverseMap();
 
             CreateMap<SucursalDeleteDto, Sucursal>().ReverseMap();
 
             CreateMap<SucursalColaboradorDto, Sucursal>().ReverseMap();
 
+
+
             CreateMap<TransportistaDto, Transportista>().ReverseMap();
 
             CreateMap<TransportistaDto, Transportista>().ReverseMap();
+
+            CreateMap<TransportistaViajeDto, Transportista>().ReverseMap();
 
         }
     }
