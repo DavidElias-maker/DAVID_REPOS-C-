@@ -28,13 +28,14 @@ namespace WebApiTransporte.Controllers
             return Ok("ingresado de manera exitosa");
 
         }
-
-        [HttpGet("Nombre")]
-        public async Task<ActionResult<TransportistaDto>> GetTransportista(string PrimerNombre)
+        [HttpGet]
+        public async Task<List<TransportistaDto>> GetTransportista()
         {
-            var ObtenerTransportista = await _TransportistaService.GetTransportista(PrimerNombre);
 
-            return ObtenerTransportista;
+            var BuscarTransportista = await _TransportistaService.GetTransportista();
+
+            return BuscarTransportista;
+
         }
 
         [HttpDelete]

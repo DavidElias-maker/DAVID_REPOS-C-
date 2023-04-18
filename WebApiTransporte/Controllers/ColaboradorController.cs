@@ -16,14 +16,18 @@ namespace WebApiTransporte.Controllers
     public class ColaboradorController : ControllerBase
     {
         private readonly IColaboradorService _ColaboradorService;
-       
-      
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ColaboradorController(IColaboradorService ColaboradorService)
+
+
+        public ColaboradorController(IColaboradorService ColaboradorService, ApplicationDbContext context, IMapper mapper)
         {
             this._ColaboradorService = ColaboradorService;
-            
-           
+            this._context = context;
+            this._mapper = mapper;
+
+
         }
 
         [HttpPost]
@@ -39,12 +43,12 @@ namespace WebApiTransporte.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ColaboradorDto>> GetColaborador()
+        public async Task<List<ColaboradorDto>> GetColaborador()
         {
-            var ObtenerColaboradores = await _ColaboradorService.GetColaborador();
 
-            return Ok(ObtenerColaboradores);
+            var BuscarColaboradores = await _ColaboradorService.GetColaborador();
 
+            return BuscarColaboradores;
 
         }
 

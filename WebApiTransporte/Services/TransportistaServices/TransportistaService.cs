@@ -44,22 +44,16 @@ namespace WebApiTransporte.Services.TransportistaServices
             }
         }
 
-        async Task<ActionResult<TransportistaDto>> ITransportistaService.GetTransportista(string PrimerNombre)
+        public async Task<List<TransportistaDto>> GetTransportista()
         {
-            try
-            {
-                var obtenertransportista = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre.Contains(PrimerNombre) && x.Activo == true);
-                if (obtenertransportista == null)
-                {
+            List<TransportistaDto> resp = new List<TransportistaDto>();
 
-                    return BadRequest($"El nombre {PrimerNombre} no ha sido encontrado en la lista de Transportistas");
-                }
-                return _mapper.Map<TransportistaDto>(obtenertransportista);
-            }
-            catch
+            var transportista = await _context.transportista.Where(x => x.Activo == true).ToListAsync();
+            if (transportista != null)
             {
-                return NotFound("Se produjo un error de conexion");
+                resp = _mapper.Map<List<Transportista>, List<TransportistaDto>>(transportista);
             }
+            return resp;
         }
 
         async Task<ActionResult<Transportista>> ITransportistaService.PostTransportista(TransportistaDto transportistaDTO)

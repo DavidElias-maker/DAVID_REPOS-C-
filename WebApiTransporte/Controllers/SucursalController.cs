@@ -29,12 +29,14 @@ namespace WebApiTransporte.Controllers
             return Ok("ingresado de manera exitosa");
 
         }
-        [HttpGet("Nombre")]
-        public async Task<ActionResult<SucursalDto>> GetSucursal(string Nombre)
+        [HttpGet]
+        public async Task<List<SucursalDto>> GetSucursal()
         {
-            var ObtenerSucursales = await _SucursalService.GetSucursal(Nombre);
 
-            return ObtenerSucursales;
+            var BuscarSucursales = await _SucursalService.GetSucursal();
+
+            return BuscarSucursales;
+
         }
 
         [HttpDelete]

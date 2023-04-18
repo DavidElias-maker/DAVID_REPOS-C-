@@ -6,7 +6,7 @@ namespace WebApiTransporte.Services.SucursalServices
 {
     public interface ISucursalService
     {
-        public Task<ActionResult<SucursalDto>> GetSucursal(string Nombre);
+        public Task<List<SucursalDto>> GetSucursal();
 
         public Task<ActionResult<Sucursal>> PostSucursal(SucursalDto sucursalDTO);
 

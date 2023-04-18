@@ -7,7 +7,7 @@ namespace WebApiTransporte.Services.TransportistaServices
 {
     public interface ITransportistaService
     {
-        public Task<ActionResult<TransportistaDto>> GetTransportista(string PrimerNombre);
+        public Task<List<TransportistaDto>> GetTransportista();
 
         public Task<ActionResult<Transportista>> PostTransportista(TransportistaDto transportistaDTO);
 

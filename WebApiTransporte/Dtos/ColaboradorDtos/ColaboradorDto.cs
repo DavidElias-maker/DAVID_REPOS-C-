@@ -13,6 +13,7 @@ namespace WebApiTransporte.Dtos
         public DateTime FechaNacimiento { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
+
        
     }
 }

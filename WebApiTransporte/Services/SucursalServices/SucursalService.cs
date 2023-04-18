@@ -43,22 +43,16 @@ namespace WebApiTransporte.Services.SucursalServices
             }
         }
 
-        public async Task<ActionResult<SucursalDto>> GetSucursal(string Nombre)
+        public async Task<List<SucursalDto>> GetSucursal()
         {
-            try
-            {
-                var obtenersucursal = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre.Contains(Nombre) && x.Activo == true);
-                if (obtenersucursal == null)
-                {
+            List<SucursalDto> resp = new List<SucursalDto>();
 
-                    return BadRequest($"El nombre {Nombre} no ha sido encontrado en la lista de sucursales");
-                }
-                return _mapper.Map<SucursalDto>(obtenersucursal);
-            }
-            catch
+            var sucursal = await _context.sucursal.Where(x => x.Activo == true).ToListAsync();
+            if (sucursal != null)
             {
-                return NotFound("Se produjo un error de conexion");
+                resp = _mapper.Map<List<Sucursal>, List<SucursalDto>>(sucursal);
             }
+            return resp;
         }
 
         public async Task<ActionResult<Sucursal>> PostSucursal(SucursalDto sucursalDTO)

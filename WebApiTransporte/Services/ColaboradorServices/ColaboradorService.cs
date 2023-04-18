@@ -94,26 +94,18 @@ namespace WebApiTransporte.Services.ColaboradorServices
             }
         }
 
-        public async Task<ActionResult<ColaboradorDto>> GetColaborador()
+        public async Task<List<ColaboradorDto>> GetColaborador()
         {
-            try
+
+            List<ColaboradorDto> resp = new List<ColaboradorDto>();
+
+            var colaborador = await _context.colaborador.Where(x => x.Activo == true).ToListAsync();
+            if (colaborador != null)
             {
-
-                // return Ok(_context.colaborador.Select(x => _mapper.Map<ColaboradorDto>(x)).Where(x => x.Activo == colaborador.Activo = true);
-
-               var colaborador = await _context.colaborador.Where(x=>x.Activo == true).ToListAsync();
-
-               return _mapper.Map<ColaboradorDto>(colaborador);
-
-
-
-
-
+                resp = _mapper.Map<List<Colaborador>, List<ColaboradorDto>>(colaborador);
             }
-            catch
-            {
-                return NotFound("Se produjo un error de conexion");
-            }
+            return resp;
+
         }
     }
 }
