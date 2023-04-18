@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.SucursalColaboradorDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
 
@@ -36,9 +37,26 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
             return collist;
         }
 
-        public Task<ActionResult<Colaborador>> PostColaborador(ColaboradorDto colaboradorDTO)
+        public async Task<ActionResult<Sucursal_Colaborador>> PostSucursalColaborador(Sucursal_ColaboradorDto SucursalColaboradorDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existeSucursal_ColaboradorConElmismoNombre = await _context.sucursal_colaborador.AnyAsync(x => x.ColaboradorId == SucursalColaboradorDTO.ColaboradorId && x.SucursalId == SucursalColaboradorDTO.SucursalId);
+
+                if (existeSucursal_ColaboradorConElmismoNombre)
+                {
+                    return BadRequest("ya existe este colaborador en esta sucursal");
+                }
+                var colaborador = _mapper.Map<Sucursal_Colaborador>(SucursalColaboradorDTO);
+
+                _context.Add(colaborador);
+                await _context.SaveChangesAsync();
+                return colaborador;
+            }
+            catch
+            {
+                return NotFound("Se produjo un error de conexion");
+            }
         }
     }
 }

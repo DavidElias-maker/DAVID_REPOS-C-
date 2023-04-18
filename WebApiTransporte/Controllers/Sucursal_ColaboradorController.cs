@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
+using WebApiTransporte.Dtos.SucursalColaboradorDtos;
 using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
@@ -36,15 +37,15 @@ namespace WebApiTransporte.Controllers
             return BuscarSucursales_Colaboradores;
         }
 
-        //[HttpGet("SucursalColaborador")]
-        //public async Task<List<SucursalColaboradorDto>> GetSucursalColaborador()
-        //{
+        [HttpPost]
+        public async Task<ActionResult<Sucursal_Colaborador>> PostSucursalColaborador(Sucursal_ColaboradorDto SucursalColaboradorDTO)
+        {
+            var IngresarSucursalColaborador = await _Sucursal_ColaboradorService.PostSucursalColaborador(SucursalColaboradorDTO);
 
-        //    var BuscarSucursalesColaboradores = await _SucursalService.GetSucursalColaborador();
+            return IngresarSucursalColaborador;
 
-        //    return BuscarSucursalesColaboradores;
+        }
 
-        //}
 
 
     }
