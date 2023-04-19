@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApiTransporte.Migrations
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,6 +77,36 @@ namespace WebApiTransporte.Migrations
                 {
                     table.PrimaryKey("PK_transportista", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "viaje",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TransportistaId = table.Column<int>(type: "int", nullable: false),
+                    SucursalId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_viaje", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "viaje_detalle",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ViajeId = table.Column<int>(type: "int", nullable: false),
+                    SucursalColaboradoresId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_viaje_detalle", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -93,6 +123,12 @@ namespace WebApiTransporte.Migrations
 
             migrationBuilder.DropTable(
                 name: "transportista");
+
+            migrationBuilder.DropTable(
+                name: "viaje");
+
+            migrationBuilder.DropTable(
+                name: "viaje_detalle");
         }
     }
 }

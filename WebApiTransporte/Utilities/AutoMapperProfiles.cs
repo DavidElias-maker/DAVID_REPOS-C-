@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.ColaboradorDtos;
+using WebApiTransporte.Dtos.SucursalColaboradorDtos;
 using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
 using WebApiTransporte.Models;
@@ -31,6 +32,9 @@ namespace WebApiTransporte.Utilities
             CreateMap<TransportistaDto, Transportista>().ReverseMap();
 
             CreateMap<TransportistaViajeDto, Transportista>().ReverseMap();
+
+
+            CreateMap<Sucursal_ColaboradorDto, Sucursal_Colaborador>().ReverseMap();
 
         }
     }

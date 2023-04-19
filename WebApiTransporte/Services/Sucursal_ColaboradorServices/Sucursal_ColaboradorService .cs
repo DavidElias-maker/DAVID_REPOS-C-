@@ -24,10 +24,12 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
         public async Task<List<SucursalColaboradorIInformation>> GetSucursalColaborador()
         {
             var collist = await(from p in _context.sucursal_colaborador
+                                join ps in _context.sucursal_colaborador on p.Id equals ps.Id
                                 join pm in _context.sucursal on p.SucursalId equals pm.Id
                                 join pd in _context.colaborador on p.ColaboradorId equals pd.Id
                                 select new SucursalColaboradorIInformation()
                                 {
+                                    Id = ps.Id,
                                     Nombre = pm.Nombre,
                                     PrimerNombre = pd.PrimerNombre,
                                     PrimerApellido = pd.PrimerApellido
@@ -39,24 +41,18 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
 
         public async Task<ActionResult<Sucursal_Colaborador>> PostSucursalColaborador(Sucursal_ColaboradorDto SucursalColaboradorDTO)
         {
-            try
-            {
-                var existeSucursal_ColaboradorConElmismoNombre = await _context.sucursal_colaborador.AnyAsync(x => x.ColaboradorId == SucursalColaboradorDTO.ColaboradorId && x.SucursalId == SucursalColaboradorDTO.SucursalId);
+            var existeSucursal_ColaboradorConElmismoNombre = await _context.sucursal_colaborador.AnyAsync(x => x.SucursalId == SucursalColaboradorDTO.SucursalId && x.ColaboradorId == SucursalColaboradorDTO.ColaboradorId);
 
-                if (existeSucursal_ColaboradorConElmismoNombre)
-                {
-                    return BadRequest("ya existe este colaborador en esta sucursal");
-                }
-                var colaborador = _mapper.Map<Sucursal_Colaborador>(SucursalColaboradorDTO);
-
-                _context.Add(colaborador);
-                await _context.SaveChangesAsync();
-                return colaborador;
-            }
-            catch
+            if (existeSucursal_ColaboradorConElmismoNombre)
             {
-                return NotFound("Se produjo un error de conexion");
+                return BadRequest("ya existe este colaborador en esta sucursal");
             }
+
+            var colaborador = _mapper.Map<Sucursal_Colaborador>(SucursalColaboradorDTO);
+
+            _context.Add(colaborador);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }

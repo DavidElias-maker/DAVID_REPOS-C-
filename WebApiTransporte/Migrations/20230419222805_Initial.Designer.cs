@@ -12,8 +12,8 @@ using WebApiTransporte.Models;
 namespace WebApiTransporte.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230418180614_Intial")]
-    partial class Intial
+    [Migration("20230419222805_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,6 +141,50 @@ namespace WebApiTransporte.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("transportista");
+                });
+
+            modelBuilder.Entity("WebApiTransporte.Models.Viaje", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SucursalId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TransportistaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("viaje");
+                });
+
+            modelBuilder.Entity("WebApiTransporte.Models.Viaje_Detalle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SucursalColaboradoresId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ViajeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("viaje_detalle");
                 });
 #pragma warning restore 612, 618
         }

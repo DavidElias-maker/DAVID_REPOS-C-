@@ -40,9 +40,11 @@ namespace WebApiTransporte.Controllers
         [HttpPost]
         public async Task<ActionResult<Sucursal_Colaborador>> PostSucursalColaborador(Sucursal_ColaboradorDto SucursalColaboradorDTO)
         {
-            var IngresarSucursalColaborador = await _Sucursal_ColaboradorService.PostSucursalColaborador(SucursalColaboradorDTO);
+             var IngresarSucursalColaborador = await _Sucursal_ColaboradorService.PostSucursalColaborador(SucursalColaboradorDTO);
 
-            return IngresarSucursalColaborador;
+             return IngresarSucursalColaborador;
+
+           
 
         }
 
