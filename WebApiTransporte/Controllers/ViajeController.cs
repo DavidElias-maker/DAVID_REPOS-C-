@@ -28,67 +28,38 @@ namespace WebApiTransporte.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Viaje>> PostViaje(Viaje viaje)
+
+        public async Task<ActionResult<Viaje_Detalle>> PostAñadirColaboradorViaje(int sucursal, int colaborador, int transportista, Viaje_Detalle request)
         {
-
-
-
-
-            //var DistanciaKm = (from f in _context.viaje
-            //                   where f.ColaboradorId == viaje.Id && f.SucursalId == viaje.SucursalId
-            //                   select f.DistanciaKm).FirstOrDefault();
-
             var sucursalcolaboradorid = (from f in _context.sucursal_colaborador
-                                         where f.SucursalId == viaje.SucursalId
+                                         where f.SucursalId == sucursal && f.ColaboradorId == colaborador
+                                         orderby f.Id
                                          select f.Id).FirstOrDefault();
 
 
-            var Tarifa = (from f in _context.transportista
-                          where f.Id == viaje.TransportistaId
-                          select f.Tarifa).FirstOrDefault();
+            request.SucursalColaboradoresId = sucursalcolaboradorid;
+            request.ViajeId = _context.viaje.OrderByDescending(p => p.Id).FirstOrDefault().Id;
 
-            var sucursalcolaborador = await _context.sucursal_colaborador
-         .FirstOrDefaultAsync(f => f.ColaboradorId == viaje.Id && f.SucursalId == viaje.SucursalId);
 
-            if (sucursalcolaborador != null)
+
+
+
+
+            var colaboradorsucur = await _context.viaje_detalle.Where(x => x.SucursalColaboradoresId == sucursalcolaboradorid && x.ViajeId == request.Id).ToListAsync();
+            if (colaboradorsucur != null)
             {
-                var tableData = await _context.viaje
-                    .Where(x => x.Fecha == viaje.Fecha)
-                    .ToListAsync();
-
-                var totalSum = tableData.Sum(x => x.Total);
-
-                return Ok(new { TotalSum = totalSum });
-            }
-            else
-            {
-                return BadRequest("No matching SucursalColaborador found.");
+                return BadRequest("este colaborador ya existe en este viaje");
             }
 
+            _context.Add(request);
+            await _context.SaveChangesAsync();
 
-            //if (existecolaboradorsucursal)
-            //{
-            //    return BadRequest("La sucursal ya existe");
-            //}
-            //else
-            //{
-
-            //}
+            return request;
 
 
 
-            // decimal totalcre = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
 
-
-            //_context.Add(totalSum);
-            //await _context.SaveChangesAsync();
-
-            
-           
         }
-       
-   
-
 
 
         [HttpPost("ViajeNuevo")]
@@ -102,14 +73,58 @@ namespace WebApiTransporte.Controllers
                 await _context.SaveChangesAsync();
                 return viaje;
 
-                
+
 
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
+        }
+        [HttpPost("Calcularviaje")]
+        public async Task<ActionResult<Viaje>> PostCalcularViaje(Viaje viaje_detalle, int sucursalcolaboradorid, int transportista)
+        {
+            //    // esto me regresa los id que tengo en viaje_detalle
+            //    var matchingValues = from a in _context.sucursal_colaborador
+            //                         join b in _context.viaje_detalle on a.Id equals b.SucursalColaboradoresId
+            //                         select a.Id;
+
+
+            var DistanciaKm = (from f in _context.sucursal_colaborador
+                               where f.Id == sucursalcolaboradorid
+                               orderby f.Id
+                               select f.DistanciaKm).FirstOrDefault();
+
+
+            var Tarifa = (from f in _context.transportista
+                          where f.Id == transportista
+                          orderby f.Id
+                          select f.Tarifa).FirstOrDefault();
+
+            var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
+
+
+
+            var lastValue = _context.viaje
+                .OrderByDescending(x => x.Id)
+                .Select(x => x.Total)
+                    .FirstOrDefault();
+
+
+            var newValue = lastValue + total;
+
+
+            var rowToUpdate = _context.viaje.OrderBy(x => x.Id).LastOrDefault();
+            rowToUpdate.Total = newValue;
+            _context.SaveChanges();
+
+            return Ok(rowToUpdate);
+
+
+
+
+
         }
     }
 }
