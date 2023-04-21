@@ -17,16 +17,14 @@ namespace WebApiTransporte.Controllers
     public class ColaboradorController : ControllerBase
     {
         private readonly IColaboradorService _ColaboradorService;
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        
 
 
 
-        public ColaboradorController(IColaboradorService ColaboradorService, ApplicationDbContext context, IMapper mapper)
+        public ColaboradorController(IColaboradorService ColaboradorService)
         {
             this._ColaboradorService = ColaboradorService;
-            this._context = context;
-            this._mapper = mapper;
+            
 
 
         }

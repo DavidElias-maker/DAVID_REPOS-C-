@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.SucursalDtos;
+using WebApiTransporte.Error;
 using WebApiTransporte.Models;
 
 
@@ -27,7 +28,7 @@ namespace WebApiTransporte.Services.SucursalServices
                 var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDeleteDTO.Nombre && x.Activo == true);
                 if (SucursalesExistente == null)
                 {
-                    return BadRequest("Sucursal no encontrada");
+                    return BadRequest(SucursalErrorMessages.LSNFE);
                 }
 
                 SucursalesExistente.Activo = false;
@@ -37,11 +38,11 @@ namespace WebApiTransporte.Services.SucursalServices
                 _context.Update(sucursal);
                 await _context.SaveChangesAsync();
 
-                return Ok("sucursal eliminado de forma exitosa");
+                return Ok(SucursalErrorMessages.SEDFE);
             }
             catch
             {
-                return NotFound("Se produjo un error de conexion");
+                return NotFound(SucursalErrorMessages.SPUEC);
             }
         }
 
@@ -78,7 +79,7 @@ namespace WebApiTransporte.Services.SucursalServices
 
                 if (existeColaboradorConElmismoNombre)
                 {
-                    return BadRequest("La sucursal ya existe");
+                    return BadRequest(SucursalErrorMessages.LSYE);
                 }
                 var sucursal = _mapper.Map<Sucursal>(sucursalDTO);
 
@@ -88,7 +89,7 @@ namespace WebApiTransporte.Services.SucursalServices
             }
             catch
             {
-                return NotFound("Se produjo un error de conexion");
+                return NotFound(SucursalErrorMessages.SPUEC);
             }
         }
     
@@ -100,7 +101,7 @@ namespace WebApiTransporte.Services.SucursalServices
                     var SucursalExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
                     if (SucursalExistente == null)
                     {
-                        return NotFound("Sucursal no encontrado");
+                        return NotFound(SucursalErrorMessages.LSNFE);
                     }
 
                     var sucursal = _mapper.Map<SucursalDto, Sucursal>(sucursalDTO, SucursalExistente);
@@ -108,12 +109,12 @@ namespace WebApiTransporte.Services.SucursalServices
                     _context.Update(sucursal);
                     await _context.SaveChangesAsync();
 
-                    return Ok("Actualizado de forma exitosa");
+                    return Ok(SucursalErrorMessages.ADFE);
 
                 }
                 catch
                 {
-                    return NotFound("Se produjo un error de conexion");
+                    return NotFound(SucursalErrorMessages.SPUEC);
                 }
 
            

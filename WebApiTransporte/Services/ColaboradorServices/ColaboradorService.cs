@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.ColaboradorDtos;
 using WebApiTransporte.Models;
+using WebApiTransporte.Error;
+using Microsoft.Identity.Client;
+
 namespace WebApiTransporte.Services.ColaboradorServices
 
 {
@@ -30,7 +33,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
 
                 if (existeColaboradorConElmismoNombre)
                 {
-                    return BadRequest("El colaborador ya existe");
+                    return BadRequest(ColaboradorErrorMessages.ECYE);
                 }
                 var colaborador = _mapper.Map<Colaborador>(colaboradorDTO);
 
@@ -40,7 +43,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
             }
             catch
             {
-                return NotFound("Se produjo un error de conexion");
+                return NotFound(ColaboradorErrorMessages.SPUEC);
             }
         }
 
@@ -51,7 +54,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
                 var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == true);
                 if (ColaboradoresExistente == null)
                 {
-                    return NotFound("Colaborador no encontrado");
+                    return NotFound(ColaboradorErrorMessages.CNE);
                 }
 
                 var colaborador = _mapper.Map<ColaboradorDto, Colaborador>(colaboradorDTO, ColaboradoresExistente);
@@ -59,12 +62,12 @@ namespace WebApiTransporte.Services.ColaboradorServices
                 _context.Update(colaborador);
                 await _context.SaveChangesAsync();
 
-                return Ok("Actualizado de forma exitosa");
+                return Ok(ColaboradorErrorMessages.ADFE);
 
             }
             catch
             {
-                return NotFound("Se produjo un error de conexion");
+                return NotFound(ColaboradorErrorMessages.SPUEC);
             }
 
 
@@ -77,7 +80,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
                 var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDeleteDTO.PrimerNombre && x.PrimerApellido == colaboradorDeleteDTO.PrimerApellido && x.Activo == true);
                 if (ColaboradoresExistente == null)
                 {
-                    return BadRequest("Colaborador no encontrado");
+                    return BadRequest(ColaboradorErrorMessages.CNE);
                 }
 
                 ColaboradoresExistente.Activo = false;
@@ -87,11 +90,11 @@ namespace WebApiTransporte.Services.ColaboradorServices
                 _context.Update(colaborador);
                 await _context.SaveChangesAsync();
 
-                return Ok("colaborador eliminado de forma exitosa");
+                return Ok(ColaboradorErrorMessages.CEDFE);
             }
             catch
             {
-                return NotFound("Se produjo un error de conexion");
+                return NotFound(ColaboradorErrorMessages.SPUEC);
             }
         }
 

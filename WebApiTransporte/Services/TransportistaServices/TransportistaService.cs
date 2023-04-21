@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
+using WebApiTransporte.Error;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.SucursalServices;
 
@@ -28,7 +29,7 @@ namespace WebApiTransporte.Services.TransportistaServices
                 var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == transportistaDeleteDTO.PrimerNombre && x.Activo == true);
                 if (TransportistaExistente == null)
                 {
-                    return BadRequest("Transportista no encontrado");
+                    return BadRequest(TransportistaErrorMessages.TNE);
                 }
                 TransportistaExistente.Activo = false;
 
@@ -37,11 +38,11 @@ namespace WebApiTransporte.Services.TransportistaServices
                 _context.Update(transportista);
                 await _context.SaveChangesAsync();
 
-                return Ok("transportista eliminado de forma exitosa");
+                return Ok(TransportistaErrorMessages.TEDFE);
             }
             catch
             {
-                return NotFound("Se produjo un error de conexion");
+                return NotFound(TransportistaErrorMessages.SPUEC);
             }
         }
 
@@ -66,7 +67,7 @@ namespace WebApiTransporte.Services.TransportistaServices
 
                     if (existeColaboradorConElmismoNombre)
                     {
-                        return BadRequest("La sucursal ya existe");
+                        return BadRequest(TransportistaErrorMessages.ETYE);
                     }
                     var transportista = _mapper.Map<Transportista>(transportistaDTO);
 
@@ -76,7 +77,7 @@ namespace WebApiTransporte.Services.TransportistaServices
                 }
                 catch
                 {
-                    return NotFound("Se produjo un error de conexion");
+                    return NotFound(TransportistaErrorMessages.SPUEC);
                 }
             
             
@@ -89,7 +90,7 @@ namespace WebApiTransporte.Services.TransportistaServices
                     var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == TransportistaDTO.PrimerNombre && x.Activo == true);
                     if (TransportistaExistente == null)
                     {
-                        return NotFound("Transportista no encontrado");
+                        return NotFound(TransportistaErrorMessages.TNE);
                     }
 
                     var transportista = _mapper.Map<TransportistaDto, Transportista>(TransportistaDTO, TransportistaExistente);
@@ -97,12 +98,12 @@ namespace WebApiTransporte.Services.TransportistaServices
                     _context.Update(transportista);
                     await _context.SaveChangesAsync();
 
-                    return Ok("Actualizado de forma exitosa");
+                    return Ok(TransportistaErrorMessages.ADFE);
 
                 }
                 catch
                 {
-                    return NotFound("Se produjo un error de conexion");
+                    return NotFound(TransportistaErrorMessages.SPUEC);
                 }
             }
 

@@ -15,16 +15,14 @@ namespace WebApiTransporte.Controllers
     public class Sucursal_ColaboradorController : ControllerBase
     {
         private readonly ISucursal_ColaboradorService _Sucursal_ColaboradorService;
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        
 
 
 
-        public Sucursal_ColaboradorController(ISucursal_ColaboradorService sucursal_colaboradorService, ApplicationDbContext context, IMapper mapper)
+        public Sucursal_ColaboradorController(ISucursal_ColaboradorService sucursal_colaboradorService)
         {
             this._Sucursal_ColaboradorService = sucursal_colaboradorService;
-            this._context = context;
-            this._mapper = mapper;
+            
 
 
         }
