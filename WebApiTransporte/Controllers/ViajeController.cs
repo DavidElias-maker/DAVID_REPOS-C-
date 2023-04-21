@@ -31,6 +31,8 @@ namespace WebApiTransporte.Controllers
 
         public async Task<ActionResult<Viaje_Detalle>> PostAñadirColaboradorViaje(int sucursal, int colaborador, int transportista, Viaje_Detalle request)
         {
+
+
             var sucursalcolaboradorid = (from f in _context.sucursal_colaborador
                                          where f.SucursalId == sucursal && f.ColaboradorId == colaborador
                                          orderby f.Id
@@ -45,11 +47,11 @@ namespace WebApiTransporte.Controllers
 
 
 
-            var colaboradorsucur = await _context.viaje_detalle.Where(x => x.SucursalColaboradoresId == sucursalcolaboradorid && x.ViajeId == request.Id).ToListAsync();
-            if (colaboradorsucur != null)
-            {
-                return BadRequest("este colaborador ya existe en este viaje");
-            }
+            //var colaboradorsucur = await _context.viaje_detalle.Where(x => x.SucursalColaboradoresId == sucursalcolaboradorid && x.ViajeId == request.Id).ToListAsync();
+            //if (colaboradorsucur != null)
+            //{
+            //    return BadRequest("este colaborador ya existe en este viaje");
+            //}
 
             _context.Add(request);
             await _context.SaveChangesAsync();
@@ -85,10 +87,7 @@ namespace WebApiTransporte.Controllers
         [HttpPost("Calcularviaje")]
         public async Task<ActionResult<Viaje>> PostCalcularViaje(Viaje viaje_detalle, int sucursalcolaboradorid, int transportista)
         {
-            //    // esto me regresa los id que tengo en viaje_detalle
-            //    var matchingValues = from a in _context.sucursal_colaborador
-            //                         join b in _context.viaje_detalle on a.Id equals b.SucursalColaboradoresId
-            //                         select a.Id;
+
 
 
             var DistanciaKm = (from f in _context.sucursal_colaborador
@@ -106,13 +105,13 @@ namespace WebApiTransporte.Controllers
 
 
 
-            var lastValue = _context.viaje
+            var UltimoValor = _context.viaje 
                 .OrderByDescending(x => x.Id)
                 .Select(x => x.Total)
                     .FirstOrDefault();
 
 
-            var newValue = lastValue + total;
+            var newValue = UltimoValor + total;
 
 
             var rowToUpdate = _context.viaje.OrderBy(x => x.Id).LastOrDefault();
@@ -124,6 +123,18 @@ namespace WebApiTransporte.Controllers
 
 
 
+
+        }
+        [HttpGet]
+
+        public async Task<ActionResult<Viaje>> GetTotalViaje(DateTime fechaInicial, DateTime fechafinal, int transportistaid)
+
+        {
+            var obtenertransportistapago = await _context.viaje
+                          .Where(v => v.TransportistaId == transportistaid && v.Fecha >= fechaInicial && v.Fecha <= fechafinal)
+                          .SumAsync(v => v.Total);
+
+            return Ok(obtenertransportistapago);
 
         }
     }
