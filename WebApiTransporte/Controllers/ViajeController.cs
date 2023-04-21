@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using Castle.Core.Resource;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -16,14 +17,18 @@ namespace WebApiTransporte.Controllers
     public class ViajeController : ControllerBase
     {
         private readonly IViajeService _ViajeService;
-        
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
 
 
-        public ViajeController(IViajeService ViajeService)
+
+        public ViajeController(IViajeService ViajeService, ApplicationDbContext context, IMapper mapper)
         {
             this._ViajeService = ViajeService;
-            
+            this._context = context;
+            this._mapper = mapper;
+
 
 
         }
@@ -66,6 +71,19 @@ namespace WebApiTransporte.Controllers
             var Reporte = await _ViajeService.GetTotalViaje(fechaInicial, fechafinal, transportistaid);
 
             return Reporte;
+
+        }
+
+        [HttpPost]
+        [Route("api/pruebaingresarviaje/{SucursalColaboradoresId}")]
+        public async Task<ActionResult<Viaje>> ViajePrueba(int sucursalcolaboradoresid)
+        {
+
+            using (var dbcontext = new DbContext(_context.colaborador))
+            {
+
+            }
+
 
         }
     }
