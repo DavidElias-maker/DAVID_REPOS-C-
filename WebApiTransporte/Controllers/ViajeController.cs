@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
+using WebApiTransporte.Error;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
 using WebApiTransporte.Services.ViajeServices;
@@ -74,14 +75,46 @@ namespace WebApiTransporte.Controllers
 
         }
 
-        [HttpPost]
-        [Route("api/pruebaingresarviaje/{SucursalColaboradoresId}")]
-        public async Task<ActionResult<Viaje>> ViajePrueba(int sucursalcolaboradoresid)
+        [HttpPost("pruebaingresarviaje")]
+        
+        public async Task<ActionResult<Viaje>> ViajePrueba(int sucursalcolaboradorid, int viajeid, int transportista)
         {
 
-            using (var dbcontext = new DbContext(_context.colaborador))
+            try
             {
+                var DistanciaKm = (from f in _context.sucursal_colaborador
+                                   where f.Id == sucursalcolaboradorid
+                                   orderby f.Id
+                                   select f.DistanciaKm).FirstOrDefault();
 
+
+                var Tarifa = (from f in _context.transportista
+                              where f.Id == transportista
+                              orderby f.Id
+                              select f.Tarifa).FirstOrDefault();
+
+                var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
+
+
+
+                var UltimoValor = _context.viaje
+                    .OrderBy(x => x.Id == viajeid)
+                    .Select(x => x.Total)
+                        .FirstOrDefault();
+
+
+                var NuevoValor = UltimoValor + total;
+
+
+                var CampoActualizar = _context.viaje.OrderBy(x => x.Id == viajeid).LastOrDefault();
+                CampoActualizar.Total = NuevoValor;
+                _context.SaveChanges();
+
+                return Ok(CampoActualizar);
+            }
+            catch
+            {
+                return NotFound(ViajeErrorMessages.SPUEC);
             }
 
 
