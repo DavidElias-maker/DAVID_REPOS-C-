@@ -47,12 +47,24 @@ namespace WebApiTransporte.Controllers
 
 
         [HttpPost("ViajeNuevo")]
-        public async Task<ActionResult<Viaje>> PostNuevoViaje(Viaje viaje)
+        public async Task<ActionResult<ViajeInformation>> PostNuevoViaje(ViajeInformation viajeInformation)
         {
 
-            var AñadirNuevoViaje = await _ViajeService.PostNuevoViaje(viaje);
+            _context.viaje.Add(viajeInformation.viaje);
+            _context.SaveChanges();
+            var ViajeId = viajeInformation.viaje.Id;
 
-            return AñadirNuevoViaje;
+            
+            viajeInformation.viaje_detalle.ViajeId = ViajeId;
+            _context.viaje_detalle.Add(viajeInformation.viaje_detalle);
+
+            
+            _context.SaveChanges();
+
+           
+            return Ok($"El viaje #{viajeInformation.viaje.Id} se ha creado de forma exitosa");
+
+            
 
         }
         [HttpPost("Calcularviaje")]
@@ -85,13 +97,13 @@ namespace WebApiTransporte.Controllers
                 var DistanciaKm = (from f in _context.sucursal_colaborador
                                    where f.Id == sucursalcolaboradorid
                                    orderby f.Id
-                                   select f.DistanciaKm).FirstOrDefault();
+                                   select f.DistanciaKm).FirstOrDefaultAsync();
 
 
                 var Tarifa = (from f in _context.transportista
                               where f.Id == transportista
                               orderby f.Id
-                              select f.Tarifa).FirstOrDefault();
+                              select f.Tarifa).FirstOrDefaultAsync();
 
                 var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
 
@@ -106,9 +118,9 @@ namespace WebApiTransporte.Controllers
                 var NuevoValor = UltimoValor + total;
 
 
-                var CampoActualizar = _context.viaje.OrderBy(x => x.Id == viajeid).LastOrDefault();
+                var CampoActualizar = await _context.viaje.OrderBy(x => x.Id == viajeid).LastOrDefaultAsync();
                 CampoActualizar.Total = NuevoValor;
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
 
                 return Ok(CampoActualizar);
             }

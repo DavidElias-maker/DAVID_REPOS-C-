@@ -101,23 +101,6 @@ namespace WebApiTransporte.Services.ViajeServices
             }
         }
 
-        public async Task<ActionResult<Viaje>> PostNuevoViaje(Viaje viaje)
-        {
-            try
-            {
-                viaje.Total = 0;
-                _context.Add(viaje);
-                await _context.SaveChangesAsync();
-                return viaje;
-
-
-
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ViajeErrorMessages.SPUEC); 
-            }
-
-        }
+       
     }
 }
