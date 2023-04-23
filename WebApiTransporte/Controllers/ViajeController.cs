@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.TransportistaDtos;
+using WebApiTransporte.Dtos.ViajeDtos;
 using WebApiTransporte.Error;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
@@ -47,24 +48,31 @@ namespace WebApiTransporte.Controllers
 
 
         [HttpPost("ViajeNuevo")]
-        public async Task<ActionResult<ViajeInformation>> PostNuevoViaje(ViajeInformation viajeInformation)
-        {
+        public async Task<ActionResult<ViajeDto>> PostNuevoViaje(ViajeInformationDto viajeInformationDto)
+        {            
 
-            _context.viaje.Add(viajeInformation.viaje);
-            _context.SaveChanges();
-            var ViajeId = viajeInformation.viaje.Id;
 
-            
-            viajeInformation.viaje_detalle.ViajeId = ViajeId;
-            _context.viaje_detalle.Add(viajeInformation.viaje_detalle);
+            var viaje = _mapper.Map<Viaje>(viajeInformationDto);
 
-            
-            _context.SaveChanges();
+            viaje.TransportistaId = viajeInformationDto.viajedto.TransportistaId;
+            viaje.Fecha = viajeInformationDto.viajedto.Fecha;
 
-           
-            return Ok($"El viaje #{viajeInformation.viaje.Id} se ha creado de forma exitosa");
+            _context.viaje.Add(viaje);
+            await _context.SaveChangesAsync();
 
-            
+            var viajeDetalleDto = new Viaje_DetalleDto
+            {
+                ViajeId = viaje.Id,
+                
+            };
+            var viajeDetalle = _mapper.Map<Viaje_Detalle>(viajeDetalleDto);
+            _context.viaje_detalle.Add(viajeDetalle);
+            await _context.SaveChangesAsync();
+
+            var viajeDto = _mapper.Map<ViajeDto>(viaje);
+            return Ok(viajeDto);
+
+
 
         }
         [HttpPost("Calcularviaje")]
