@@ -49,13 +49,13 @@ namespace WebApiTransporte.Controllers
 
         [HttpPost("ViajeNuevo")]
         public async Task<ActionResult<ViajeDto>> PostNuevoViaje(ViajeInformationDto viajeInformationDto)
-        {            
-
+        {
+            
 
             var viaje = _mapper.Map<Viaje>(viajeInformationDto);
 
             viaje.TransportistaId = viajeInformationDto.viajedto.TransportistaId;
-            viaje.Fecha = viajeInformationDto.viajedto.Fecha;
+            viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")); 
 
             _context.viaje.Add(viaje);
             await _context.SaveChangesAsync();
@@ -96,48 +96,55 @@ namespace WebApiTransporte.Controllers
         }
 
         [HttpPost("pruebaingresarviaje")]
-        
-        public async Task<ActionResult<Viaje>> ViajePrueba(int sucursalcolaboradorid, int viajeid, int transportista)
+
+
+
+
+        public async Task<ActionResult<Viaje_DetalleDto>> PostAñadirColaboradorPrueba(ViajeInformationDto viajeInformationDto)
         {
 
-            try
-            {
-                var DistanciaKm = (from f in _context.sucursal_colaborador
-                                   where f.Id == sucursalcolaboradorid
-                                   orderby f.Id
-                                   select f.DistanciaKm).FirstOrDefaultAsync();
+            var viaje_detalle = _mapper.Map<Viaje_Detalle>(viajeInformationDto);
+
+            viaje_detalle.SucursalColaboradoresId = viajeInformationDto.viaje_detalledto.SucursalColaboradoresId;
+            viaje_detalle.ViajeId = viajeInformationDto.viaje_detalledto.ViajeId;
+            
+            _context.viaje_detalle.Add(viaje_detalle);
+            await _context.SaveChangesAsync();
 
 
-                var Tarifa = (from f in _context.transportista
-                              where f.Id == transportista
-                              orderby f.Id
-                              select f.Tarifa).FirstOrDefaultAsync();
-
-                var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
+            var DistanciaKm = (from f in _context.sucursal_colaborador
+                               where f.Id == viaje_detalle.SucursalColaboradoresId
+                               orderby f.Id
+                               select f.DistanciaKm).FirstOrDefault();
 
 
+           var Tarifa = (from f in _context.transportista
+                         where f.Id == viajeInformationDto.viajedto.TransportistaId
+                         orderby f.Id
+                         select f.Tarifa).FirstOrDefault();
 
-                var UltimoValor = _context.viaje
-                    .OrderBy(x => x.Id == viajeid)
-                    .Select(x => x.Total)
-                        .FirstOrDefault();
+            var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
 
+            var UltimoValor = _context.viaje
+                .OrderBy(x => x.Id == viaje_detalle.ViajeId)
+                .Select(x => x.Total)
+                    .FirstOrDefault();
 
-                var NuevoValor = UltimoValor + total;
+            var NuevoValor = UltimoValor + total;
 
-
-                var CampoActualizar = await _context.viaje.OrderBy(x => x.Id == viajeid).LastOrDefaultAsync();
+            var CampoActualizar = await _context.viaje.OrderBy(x => x.Id == viaje_detalle.ViajeId).LastOrDefaultAsync();
                 CampoActualizar.Total = NuevoValor;
-               await _context.SaveChangesAsync();
+
+            CampoActualizar.Total = NuevoValor;
+
+
+            await _context.SaveChangesAsync();
 
                 return Ok(CampoActualizar);
-            }
-            catch
-            {
-                return NotFound(ViajeErrorMessages.SPUEC);
-            }
-
 
         }
+
+       
+
     }
 }
