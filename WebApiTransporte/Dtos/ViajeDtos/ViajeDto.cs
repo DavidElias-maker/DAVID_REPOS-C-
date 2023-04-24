@@ -5,5 +5,7 @@
         public int Id { get; set; }
         
         public int TransportistaId { get; set; }
+
+        public int SucursalId { get; set; }
     }
 }

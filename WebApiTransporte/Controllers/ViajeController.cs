@@ -55,7 +55,8 @@ namespace WebApiTransporte.Controllers
             var viaje = _mapper.Map<Viaje>(viajeInformationDto);
 
             viaje.TransportistaId = viajeInformationDto.viajedto.TransportistaId;
-            viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")); 
+            viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+            viaje.SucursalId = viajeInformationDto.viajedto.SucursalId;
 
             _context.viaje.Add(viaje);
             await _context.SaveChangesAsync();
@@ -100,14 +101,22 @@ namespace WebApiTransporte.Controllers
 
 
 
-        public async Task<ActionResult<Viaje_DetalleDto>> PostAñadirColaboradorPrueba(ViajeInformationDto viajeInformationDto)
+        public async Task<ActionResult<ViajeDto>> PostAñadirColaboradorPrueba(ViajeInformationDto viajeInformationDto)
         {
+            var existeColaboradorConelmismoid = await _context.viaje_detalle.AnyAsync(x => x.SucursalColaboradoresId == viajeInformationDto.viaje_detalledto.SucursalColaboradoresId && x.ViajeId == viajeInformationDto.viaje_detalledto.ViajeId);
+
+            if (existeColaboradorConelmismoid)
+            {
+                return BadRequest(TransportistaErrorMessages.ETYE);
+            }
 
             var viaje_detalle = _mapper.Map<Viaje_Detalle>(viajeInformationDto);
 
             viaje_detalle.SucursalColaboradoresId = viajeInformationDto.viaje_detalledto.SucursalColaboradoresId;
             viaje_detalle.ViajeId = viajeInformationDto.viaje_detalledto.ViajeId;
+
             
+
             _context.viaje_detalle.Add(viaje_detalle);
             await _context.SaveChangesAsync();
 
@@ -126,7 +135,7 @@ namespace WebApiTransporte.Controllers
             var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
 
             var UltimoValor = _context.viaje
-                .OrderBy(x => x.Id == viaje_detalle.ViajeId)
+                .OrderByDescending(x => x.Id == viaje_detalle.ViajeId)
                 .Select(x => x.Total)
                     .FirstOrDefault();
 
