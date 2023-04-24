@@ -35,16 +35,8 @@ namespace WebApiTransporte.Controllers
 
         }
 
-        [HttpPost("Añadir Colaborador")]
-
-        public async Task<ActionResult<Viaje_Detalle>> PostAñadirColaboradorViaje(int sucursal, int colaborador, Viaje_Detalle request)
-        {
-
-            var AñadirColaborador = await _ViajeService.PostAñadirColaboradorViaje(sucursal,colaborador,request);
-
-            return AñadirColaborador;
-
-        }
+       
+        
 
 
         [HttpPost("ViajeNuevo")]
@@ -75,17 +67,7 @@ namespace WebApiTransporte.Controllers
 
 
 
-        }
-        [HttpPost("Calcularviaje")]
-        public ActionResult<Viaje> PostCalcularViaje(Viaje viaje_detalle, int sucursalcolaboradorid, int transportista)
-        {
-
-            var CalcularViaje =  _ViajeService.PostCalcularViaje(viaje_detalle, sucursalcolaboradorid, transportista);
-
-            return CalcularViaje;
-
-
-        }
+        }       
         [HttpGet("Reporte")]
 
         public async Task<ActionResult<Viaje>> GetTotalViaje(DateTime fechaInicial, DateTime fechafinal, int transportistaid)
