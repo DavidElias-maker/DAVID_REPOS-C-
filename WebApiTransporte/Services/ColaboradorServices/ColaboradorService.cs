@@ -51,7 +51,7 @@ namespace WebApiTransporte.Services.ColaboradorServices
         {
             try
             {
-                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.PrimerNombre == colaboradorDTO.PrimerNombre && x.PrimerApellido == colaboradorDTO.PrimerApellido && x.Activo == true);
+                var ColaboradoresExistente = await _context.colaborador.FirstOrDefaultAsync(x => x.Id == colaboradorDTO.Id && x.Activo == true);
                 if (ColaboradoresExistente == null)
                 {
                     return NotFound(ColaboradorErrorMessages.CNE);

@@ -31,6 +31,12 @@ namespace WebApiTransporte
             services.AddAutoMapper(typeof(Program).Assembly);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddCors(options => options.AddPolicy(name: "ColaboradorOrigins",
+                policy => 
+                {
+                    policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+
+            }));
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -39,6 +45,8 @@ namespace WebApiTransporte
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("ColaboradorOrigins");
 
             app.UseHttpsRedirection();
             app.UseRouting(); 

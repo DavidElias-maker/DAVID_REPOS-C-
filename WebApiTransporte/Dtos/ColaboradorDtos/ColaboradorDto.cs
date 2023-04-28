@@ -4,7 +4,7 @@ namespace WebApiTransporte.Dtos
 {
     public class ColaboradorDto
     {
-       
+        public int Id { get; set; }
         [PrimeraLetraMayuscula]
         public string PrimerNombre { get; set; }
         [PrimeraLetraMayuscula]

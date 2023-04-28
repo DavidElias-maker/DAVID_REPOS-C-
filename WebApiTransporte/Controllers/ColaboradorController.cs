@@ -12,19 +12,24 @@ using WebApiTransporte.Services.SucursalServices;
 
 namespace WebApiTransporte.Controllers
 {
+    
+    [Route("api/[Controller]")]
     [ApiController]
-    [Route("api/Colaborador")]
     public class ColaboradorController : ControllerBase
     {
         private readonly IColaboradorService _ColaboradorService;
-        
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
 
 
-        public ColaboradorController(IColaboradorService ColaboradorService)
+
+        public ColaboradorController(IColaboradorService ColaboradorService, ApplicationDbContext context, IMapper mapper)
         {
             this._ColaboradorService = ColaboradorService;
-            
+            this._context = context;
+            this._mapper = mapper;
+
 
 
         }
@@ -32,7 +37,7 @@ namespace WebApiTransporte.Controllers
         [HttpPost]
         public async Task<ActionResult<Colaborador>> PostColaborador(ColaboradorDto colaboradorDTO)
         {
-            var IngresarColaboradores = await _ColaboradorService.PostColaborador(colaboradorDTO);
+           var IngresarColaboradores = await _ColaboradorService.PostColaborador(colaboradorDTO);
 
             return IngresarColaboradores;
            
@@ -77,6 +82,14 @@ namespace WebApiTransporte.Controllers
             return BuscarColaboradoresSucursales;
 
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllColaboradores()
+        //{
+        //   var colaboradores=  await _context.colaborador.ToListAsync();
+
+        //    return Ok(colaboradores);
+        //}
 
     }
 
