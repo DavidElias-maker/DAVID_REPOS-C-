@@ -25,7 +25,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
             try
             {
-                var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDeleteDTO.Nombre && x.Activo == true);
+                var SucursalesExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Id == sucursalDeleteDTO.Id && x.Activo == true);
                 if (SucursalesExistente == null)
                 {
                     return BadRequest(SucursalErrorMessages.LSNFE);
@@ -75,7 +75,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
             try
             {
-                var existeColaboradorConElmismoNombre = await _context.sucursal.AnyAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
+                var existeColaboradorConElmismoNombre = await _context.sucursal.AnyAsync(x => x.Id == sucursalDTO.Id && x.Activo == true);
 
                 if (existeColaboradorConElmismoNombre)
                 {
@@ -98,7 +98,7 @@ namespace WebApiTransporte.Services.SucursalServices
         {
                 try
                 {
-                    var SucursalExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Nombre == sucursalDTO.Nombre && x.Activo == true);
+                    var SucursalExistente = await _context.sucursal.FirstOrDefaultAsync(x => x.Id == sucursalDTO.Id && x.Activo == true);
                     if (SucursalExistente == null)
                     {
                         return NotFound(SucursalErrorMessages.LSNFE);
