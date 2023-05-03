@@ -26,11 +26,12 @@ namespace WebApiTransporte.Services.TransportistaServices
         {
             try
             {
-                var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == transportistaDeleteDTO.PrimerNombre && x.Activo == true);
+                var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.Id == transportistaDeleteDTO.Id && x.Activo == true);
                 if (TransportistaExistente == null)
                 {
-                    return BadRequest(TransportistaErrorMessages.TNE);
+                    return BadRequest(TransportistaErrorMessages.TEDFE);
                 }
+
                 TransportistaExistente.Activo = false;
 
                 var transportista = _mapper.Map<TransportistaDeleteDto, Transportista>(transportistaDeleteDTO, TransportistaExistente);
@@ -63,7 +64,7 @@ namespace WebApiTransporte.Services.TransportistaServices
            
                 try
                 {
-                    var existeColaboradorConElmismoNombre = await _context.transportista.AnyAsync(x => x.PrimerNombre == transportistaDTO.PrimerNombre && x.Activo == true);
+                    var existeColaboradorConElmismoNombre = await _context.transportista.AnyAsync(x => x.Id == transportistaDTO.Id && x.Activo == true);
 
                     if (existeColaboradorConElmismoNombre)
                     {
@@ -87,7 +88,7 @@ namespace WebApiTransporte.Services.TransportistaServices
         {
                 try
                 {
-                    var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.PrimerNombre == TransportistaDTO.PrimerNombre && x.Activo == true);
+                    var TransportistaExistente = await _context.transportista.FirstOrDefaultAsync(x => x.Id == TransportistaDTO.Id && x.Activo == true);
                     if (TransportistaExistente == null)
                     {
                         return NotFound(TransportistaErrorMessages.TNE);

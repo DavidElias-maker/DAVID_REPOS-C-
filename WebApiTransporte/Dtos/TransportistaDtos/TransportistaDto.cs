@@ -4,6 +4,7 @@ namespace WebApiTransporte.Dtos.TransportistaDtos
 {
     public class TransportistaDto
     {
+        public int Id { get; set; }
         [PrimeraLetraMayuscula]
         public string PrimerNombre { get; set; }
         public DateTime FechaNacimiento { get; set; }

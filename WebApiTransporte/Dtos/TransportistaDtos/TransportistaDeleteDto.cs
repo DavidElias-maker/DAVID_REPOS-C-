@@ -4,7 +4,7 @@ namespace WebApiTransporte.Dtos.TransportistaDtos
 {
     public class TransportistaDeleteDto
     {
-        [PrimeraLetraMayuscula]
-        public string PrimerNombre { get; set; }
+        public int Id { get; set; }
+
     }
 }
