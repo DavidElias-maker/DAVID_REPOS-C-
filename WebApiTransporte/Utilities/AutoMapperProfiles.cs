@@ -30,7 +30,7 @@ namespace WebApiTransporte.Utilities
 
             CreateMap<TransportistaDto, Transportista>().ReverseMap();
 
-            CreateMap<TransportistaDto, Transportista>().ReverseMap();
+            CreateMap<TransportistaDeleteDto, Transportista>().ReverseMap();
 
             CreateMap<TransportistaViajeDto, Transportista>().ReverseMap();
 
