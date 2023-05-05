@@ -30,12 +30,13 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
                                      join ps in _context.sucursal_colaborador on p.Id equals ps.Id
                                      join pm in _context.sucursal on p.SucursalId equals pm.Id
                                      join pd in _context.colaborador on p.ColaboradorId equals pd.Id
+                                     
                                      select new SucursalColaboradorIInformation()
                                      {
                                          Id = ps.Id,
                                          Nombre = pm.Nombre,
-                                         PrimerNombre = pd.PrimerNombre,
-                                         PrimerApellido = pd.PrimerApellido
+                                         NombreCompleto = pd.PrimerNombre + " " + pd.PrimerApellido,
+                                        DistanciaKm = ps.DistanciaKm
 
                                      }).ToListAsync();
 

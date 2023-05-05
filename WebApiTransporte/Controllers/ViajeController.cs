@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using Castle.Core.Resource;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -35,14 +36,14 @@ namespace WebApiTransporte.Controllers
 
         }
 
-       
-        
+
+
 
 
         [HttpPost("ViajeNuevo")]
         public async Task<ActionResult<ViajeDto>> PostNuevoViaje(ViajeInformationDto viajeInformationDto)
         {
-            
+
 
             var viaje = _mapper.Map<Viaje>(viajeInformationDto);
 
@@ -56,7 +57,7 @@ namespace WebApiTransporte.Controllers
             var viajeDetalleDto = new Viaje_DetalleDto
             {
                 ViajeId = viaje.Id,
-                
+
             };
             var viajeDetalle = _mapper.Map<Viaje_Detalle>(viajeDetalleDto);
             _context.viaje_detalle.Add(viajeDetalle);
@@ -67,7 +68,7 @@ namespace WebApiTransporte.Controllers
 
 
 
-        }       
+        }
         [HttpGet("Reporte")]
 
         public async Task<ActionResult<Viaje>> GetTotalViaje(DateTime fechaInicial, DateTime fechafinal, int transportistaid)
@@ -97,7 +98,7 @@ namespace WebApiTransporte.Controllers
             viaje_detalle.SucursalColaboradoresId = viajeInformationDto.viaje_detalledto.SucursalColaboradoresId;
             viaje_detalle.ViajeId = viajeInformationDto.viaje_detalledto.ViajeId;
 
-            
+
 
             _context.viaje_detalle.Add(viaje_detalle);
             await _context.SaveChangesAsync();
@@ -109,10 +110,10 @@ namespace WebApiTransporte.Controllers
                                select f.DistanciaKm).FirstOrDefault();
 
 
-           var Tarifa = (from f in _context.transportista
-                         where f.Id == viajeInformationDto.viajedto.TransportistaId
-                         orderby f.Id
-                         select f.Tarifa).FirstOrDefault();
+            var Tarifa = (from f in _context.transportista
+                          where f.Id == viajeInformationDto.viajedto.TransportistaId
+                          orderby f.Id
+                          select f.Tarifa).FirstOrDefault();
 
             var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
 
@@ -124,18 +125,73 @@ namespace WebApiTransporte.Controllers
             var NuevoValor = UltimoValor + total;
 
             var CampoActualizar = await _context.viaje.OrderBy(x => x.Id == viaje_detalle.ViajeId).LastOrDefaultAsync();
-                CampoActualizar.Total = NuevoValor;
+            CampoActualizar.Total = NuevoValor;
 
             CampoActualizar.Total = NuevoValor;
 
 
             await _context.SaveChangesAsync();
 
-                return Ok(CampoActualizar);
+            return Ok(CampoActualizar);
 
         }
+        [HttpPost("pruebafor")]
+        public async Task<ActionResult<ViajeInsert>> PostCicloFor([FromBody] List<ViajeInsert> viajeinsert)
+        {
+            decimal total = 0;
 
-       
+            Viaje_Detalle viaje_detalle = new Viaje_Detalle();
 
+            Viaje viaje = new Viaje();
+
+            if (viajeinsert != null && viajeinsert.Count > 0)
+            {
+
+                viaje.TransportistaId = viajeinsert[0].TransportistaId;
+                viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                viaje_detalle.SucursalColaboradoresId = viajeinsert[0].SucursalColaboradoresId;
+               
+
+
+            }
+
+
+            _context.viaje.Add(viaje);
+            await _context.SaveChangesAsync();
+
+           viaje_detalle.ViajeId = viaje.Id;
+
+            _context.viaje_detalle.Add(viaje_detalle);
+           
+            await _context.SaveChangesAsync();
+
+            var DistanciaKm = (from f in _context.sucursal_colaborador
+                               where f.Id == viaje_detalle.SucursalColaboradoresId
+                               orderby f.Id
+                               select f.DistanciaKm).FirstOrDefault();
+
+
+            var Tarifa = (from f in _context.transportista
+                          where f.Id == viaje.TransportistaId
+                          orderby f.Id
+                          select f.Tarifa).FirstOrDefault();
+
+            foreach (var item in viajeinsert)
+            {
+
+                _context.viaje_detalle.Add(viaje_detalle);
+
+                // Calculate the total
+                total +=  DistanciaKm * Tarifa;
+
+            }
+
+
+
+
+
+            return Ok(total);
+            }
+
+        }
     }
-}
