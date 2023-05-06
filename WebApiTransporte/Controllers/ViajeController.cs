@@ -138,60 +138,45 @@ namespace WebApiTransporte.Controllers
         [HttpPost("pruebafor")]
         public async Task<ActionResult<ViajeInsert>> PostCicloFor([FromBody] List<ViajeInsert> viajeinsert)
         {
-            decimal total = 0;
-
-            Viaje_Detalle viaje_detalle = new Viaje_Detalle();
-
             Viaje viaje = new Viaje();
-
-            if (viajeinsert != null && viajeinsert.Count > 0)
-            {
-
-                viaje.TransportistaId = viajeinsert[0].TransportistaId;
-                viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-                viaje_detalle.SucursalColaboradoresId = viajeinsert[0].SucursalColaboradoresId;
-               
-
-
-            }
-
-
+            viaje.TransportistaId = viajeinsert[0].TransportistaId;
+            viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
             _context.viaje.Add(viaje);
             await _context.SaveChangesAsync();
 
-           viaje_detalle.ViajeId = viaje.Id;
-
-            _context.viaje_detalle.Add(viaje_detalle);
-           
-            await _context.SaveChangesAsync();
-
-            var DistanciaKm = (from f in _context.sucursal_colaborador
-                               where f.Id == viaje_detalle.SucursalColaboradoresId
-                               orderby f.Id
-                               select f.DistanciaKm).FirstOrDefault();
-
-
-            var Tarifa = (from f in _context.transportista
-                          where f.Id == viaje.TransportistaId
-                          orderby f.Id
-                          select f.Tarifa).FirstOrDefault();
-
-            foreach (var item in viajeinsert)
+            decimal total = 0;
+            foreach (var element in viajeinsert)
             {
-
+                Viaje_Detalle viaje_detalle = new Viaje_Detalle();
+                viaje_detalle.ViajeId = viaje.Id;
+                viaje_detalle.SucursalColaboradoresId = element.SucursalColaboradoresId;
                 _context.viaje_detalle.Add(viaje_detalle);
 
-                // Calculate the total
-                total +=  DistanciaKm * Tarifa;
+                var DistanciaKm = (from f in _context.sucursal_colaborador
+                                   where f.Id == viaje_detalle.SucursalColaboradoresId
+                                   orderby f.Id
+                                   select f.DistanciaKm).FirstOrDefault();
 
+                var Tarifa = (from f in _context.transportista
+                              where f.Id == viaje.TransportistaId
+                              orderby f.Id
+                              select f.Tarifa).FirstOrDefault();
+
+                var sucursal = (from f in _context.sucursal_colaborador
+                                where f.Id == viaje_detalle.SucursalColaboradoresId
+                                orderby f.Id
+                              select f.SucursalId).FirstOrDefault();
+
+                total += DistanciaKm * Tarifa;
+                viaje.SucursalId = sucursal;
             }
+            viaje.Total = total;
+           
 
-
-
-
+            await _context.SaveChangesAsync();
 
             return Ok(total);
-            }
+        }
 
         }
     }
