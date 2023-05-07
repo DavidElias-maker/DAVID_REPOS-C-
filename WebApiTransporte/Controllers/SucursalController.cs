@@ -74,30 +74,25 @@ namespace WebApiTransporte.Controllers
             return BuscarSucursalesColaboradores;
 
         }
-        [HttpGet("SucursalColaboradorById")]
-        public async Task<List<SucursalGetColaboradores>> GetSucursalColaboradorById(int sucursalid)
+        [HttpPost("SucursalColaboradorById")]
+        public async Task<List<SucursalGetColaboradores>> GetSucursalColaboradorById([FromBody] SucursalGetColaboradores sucursalGet)
         {
-
-
             var collist = await (from p in _context.sucursal_colaborador
                                  join ps in _context.sucursal_colaborador on p.Id equals ps.Id
                                  join pm in _context.sucursal on p.SucursalId equals pm.Id
                                  join pd in _context.colaborador on p.ColaboradorId equals pd.Id
-                                 where p.SucursalId == sucursalid
+                                 where p.SucursalId == sucursalGet.sucursalid
                                  select new SucursalGetColaboradores()
                                  {
-
                                      Id = ps.Id,
                                      Nombre = pm.Nombre,
                                      NombreCompleto = pd.PrimerNombre + " " + pd.PrimerApellido,
                                      DistanciaKm = ps.DistanciaKm
-
                                  }).ToListAsync();
 
             return collist;
-
         }
-       
+
 
     }
 }

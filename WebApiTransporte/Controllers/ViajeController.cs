@@ -136,10 +136,10 @@ namespace WebApiTransporte.Controllers
 
         }
         [HttpPost("pruebafor")]
-        public async Task<ActionResult<ViajeInsert>> PostCicloFor([FromBody] List<ViajeInsert> viajeinsert)
+        public async Task<ActionResult<ViajeInsert>> PostCicloFor(int transportistaId, [FromBody] List<ViajeInsert> viajeinsert)
         {
             Viaje viaje = new Viaje();
-            viaje.TransportistaId = viajeinsert[0].TransportistaId;
+            viaje.TransportistaId = transportistaId;
             viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
             _context.viaje.Add(viaje);
             await _context.SaveChangesAsync();

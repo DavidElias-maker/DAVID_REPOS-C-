@@ -4,7 +4,7 @@
     {
         public int SucursalColaboradoresId { get; set; }
 
-        public int TransportistaId { get; set; } 
+       
 
 
     }
