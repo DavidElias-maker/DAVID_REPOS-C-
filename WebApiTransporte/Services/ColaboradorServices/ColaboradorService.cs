@@ -118,11 +118,26 @@ namespace WebApiTransporte.Services.ColaboradorServices
             List<ColaboradorSucursalDto> resp = new List<ColaboradorSucursalDto>();
 
             var colaborador = await _context.colaborador.Where(x => x.Activo == true).ToListAsync();
+
+            
             if (colaborador != null)
             {
-                resp = _mapper.Map<List<Colaborador>, List<ColaboradorSucursalDto>>(colaborador);
+                resp = _mapper.Map<List<Colaborador>, List<ColaboradorSucursalDto>>(
+                             colaborador,
+                             opts => opts.AfterMap((src, dest) =>
+    {
+                                 foreach (var dto in dest)
+        {
+                         dto.NombreCompleto = $"{dto.PrimerNombre} {dto.PrimerApellido}";
+        }
+    })
+);
             }
             return resp;
+
+
+
+
 
 
         }

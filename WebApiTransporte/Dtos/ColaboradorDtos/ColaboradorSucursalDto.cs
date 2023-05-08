@@ -9,5 +9,7 @@ namespace WebApiTransporte.Dtos.ColaboradorDtos
         public string PrimerNombre { get; set; }
         [PrimeraLetraMayuscula]
         public string PrimerApellido { get; set; }
+
+        public string NombreCompleto { get; set; }
     }
 }
