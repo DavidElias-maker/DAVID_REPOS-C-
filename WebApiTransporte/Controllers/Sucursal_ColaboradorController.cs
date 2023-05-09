@@ -15,14 +15,14 @@ namespace WebApiTransporte.Controllers
     public class Sucursal_ColaboradorController : ControllerBase
     {
         private readonly ISucursal_ColaboradorService _Sucursal_ColaboradorService;
-        
+
 
 
 
         public Sucursal_ColaboradorController(ISucursal_ColaboradorService sucursal_colaboradorService)
         {
             this._Sucursal_ColaboradorService = sucursal_colaboradorService;
-            
+
 
 
         }
@@ -38,15 +38,21 @@ namespace WebApiTransporte.Controllers
         [HttpPost]
         public async Task<ActionResult<Sucursal_Colaborador>> PostSucursalColaborador(Sucursal_ColaboradorDto SucursalColaboradorDTO)
         {
-             var IngresarSucursalColaborador = await _Sucursal_ColaboradorService.PostSucursalColaborador(SucursalColaboradorDTO);
+            var IngresarSucursalColaborador = await _Sucursal_ColaboradorService.PostSucursalColaborador(SucursalColaboradorDTO);
 
-             return IngresarSucursalColaborador;
+            return IngresarSucursalColaborador;
 
-           
+
 
         }
 
+        [HttpPut]
+        public async Task<ActionResult> UpdateSucursalColaborador(Sucursal_ColaboradorDto sucursalcolaboradorDTO)
+        {
+            var ActualizarSucursales = await _Sucursal_ColaboradorService.UpdateSucursalColaborador(sucursalcolaboradorDTO);
 
+            return ActualizarSucursales;
 
+        }
     }
 }

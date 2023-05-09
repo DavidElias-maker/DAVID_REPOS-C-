@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiTransporte.Dtos;
 using WebApiTransporte.Dtos.SucursalColaboradorDtos;
+using WebApiTransporte.Dtos.SucursalDtos;
 using WebApiTransporte.Error;
 using WebApiTransporte.Models;
 using WebApiTransporte.Services.ColaboradorServices;
@@ -36,7 +37,9 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
                                          Id = ps.Id,
                                          Nombre = pm.Nombre,
                                          NombreCompleto = pd.PrimerNombre + " " + pd.PrimerApellido,
-                                        DistanciaKm = ps.DistanciaKm
+                                        DistanciaKm = ps.DistanciaKm,
+                                        colaboradorId = pd.Id,
+                                        sucursalId = pm.Id
 
                                      }).ToListAsync();
 
@@ -66,5 +69,35 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
                 return NotFound(Sucursal_ColaboradorErrorMessages.SPUEC);
             }
         }
+
+        public async Task<ActionResult> UpdateSucursalColaborador(Sucursal_ColaboradorDto sucursalcolaboradorDTO)
+        {
+            try
+            {
+                var SucursalColaboradorExistente = await _context.sucursal_colaborador.FirstOrDefaultAsync(x => x.Id == sucursalcolaboradorDTO.Id && x.Activo == true);
+                if (SucursalColaboradorExistente == null)
+                {
+                    return NotFound(SucursalErrorMessages.LSNFE);
+                }
+
+                var sucursalcolaborador = _mapper.Map<Sucursal_ColaboradorDto, Sucursal_Colaborador>(sucursalcolaboradorDTO, SucursalColaboradorExistente);
+
+                _context.Update(sucursalcolaborador);
+                await _context.SaveChangesAsync();
+
+                return Ok(SucursalErrorMessages.ADFE);
+
+            }
+            catch
+            {
+                return NotFound(SucursalErrorMessages.SPUEC);
+            }
+
+
+
+        }
+
+
+
     }
 }
