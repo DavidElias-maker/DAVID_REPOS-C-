@@ -35,72 +35,49 @@ namespace WebApiTransporte.Services.ViajeServices
             }
         }
 
-        public async Task<ActionResult<Viaje_Detalle>> PostAñadirColaboradorViaje(int sucursal, int colaborador, Viaje_Detalle request)
+        public async Task<ActionResult<ViajeInsert>> PostCicloFor(int transportistaId, [FromBody] List<ViajeInsert> viajeinsert)
         {
-            try
+            Viaje viaje = new Viaje();
+            viaje.TransportistaId = transportistaId;
+            viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+            _context.viaje.Add(viaje);
+            await _context.SaveChangesAsync();
+
+            decimal total = 0;
+            foreach (var element in viajeinsert)
             {
-                var sucursalcolaboradorid = (from f in _context.sucursal_colaborador
-                                             where f.SucursalId == sucursal && f.ColaboradorId == colaborador
-                                             orderby f.Id
-                                             select f.Id).FirstOrDefault();
+                Viaje_Detalle viaje_detalle = new Viaje_Detalle();
+                viaje_detalle.ViajeId = viaje.Id;
+                viaje_detalle.SucursalColaboradoresId = element.SucursalColaboradoresId;
+                _context.viaje_detalle.Add(viaje_detalle);
 
-
-                request.SucursalColaboradoresId = sucursalcolaboradorid;
-                request.ViajeId = _context.viaje.OrderByDescending(p => p.Id).FirstOrDefault().Id;
-
-
-
-                _context.Add(request);
-                await _context.SaveChangesAsync();
-
-                return request;
-            }
-            catch
-            {
-                return NotFound(ViajeErrorMessages.SPUEC);
-            }
-        }
-
-        public ActionResult<Viaje> PostCalcularViaje(Viaje viaje_detalle, int sucursalcolaboradorid, int transportista)
-        {
-            try
-            {
                 var DistanciaKm = (from f in _context.sucursal_colaborador
-                                   where f.Id == sucursalcolaboradorid
+                                   where f.Id == viaje_detalle.SucursalColaboradoresId
                                    orderby f.Id
                                    select f.DistanciaKm).FirstOrDefault();
 
-
                 var Tarifa = (from f in _context.transportista
-                              where f.Id == transportista
+                              where f.Id == viaje.TransportistaId
                               orderby f.Id
                               select f.Tarifa).FirstOrDefault();
 
-                var total = Convert.ToDecimal(DistanciaKm) * Convert.ToDecimal(Tarifa);
+                var sucursal = (from f in _context.sucursal_colaborador
+                                where f.Id == viaje_detalle.SucursalColaboradoresId
+                                orderby f.Id
+                                select f.SucursalId).FirstOrDefault();
 
-
-
-                var UltimoValor = _context.viaje
-                    .OrderByDescending(x => x.Id)
-                    .Select(x => x.Total)
-                        .FirstOrDefault();
-
-
-                var NuevoValor = UltimoValor + total;
-
-
-                var CampoActualizar = _context.viaje.OrderBy(x => x.Id).LastOrDefault();
-                CampoActualizar.Total = NuevoValor;
-                _context.SaveChanges();
-
-                return Ok(CampoActualizar);
+                total += DistanciaKm * Tarifa;
+                viaje.SucursalId = sucursal;
             }
-            catch
-            {
-                return NotFound(ViajeErrorMessages.SPUEC);
-            }
+            viaje.Total = total;
+
+
+            await _context.SaveChangesAsync();
+
+            return Ok(total);
         }
 
-       
     }
+
 }
+
