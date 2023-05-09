@@ -97,7 +97,30 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
 
         }
 
+        public async Task<ActionResult> DeleteSucursalColaborador(Sucursal_ColaboradorDeleteDto sucursalcolaboradorDeleteDTO)
+        {
+            try
+            {
+                var Sucursal_ColaboradoresExistente = await _context.sucursal_colaborador.FirstOrDefaultAsync(x => x.Id == sucursalcolaboradorDeleteDTO.Id && x.Activo == true);
+                if (Sucursal_ColaboradoresExistente == null)
+                {
+                    return BadRequest(ColaboradorErrorMessages.CNE);
+                }
 
+                Sucursal_ColaboradoresExistente.Activo = false;
+
+                var sucursal_colaborador = _mapper.Map<Sucursal_ColaboradorDeleteDto, Sucursal_Colaborador>(sucursalcolaboradorDeleteDTO, Sucursal_ColaboradoresExistente);
+
+                _context.Update(sucursal_colaborador);
+                await _context.SaveChangesAsync();
+
+                return Ok(ColaboradorErrorMessages.CEDFE);
+            }
+            catch
+            {
+                return NotFound(ColaboradorErrorMessages.SPUEC);
+            }
+        }
 
     }
 }

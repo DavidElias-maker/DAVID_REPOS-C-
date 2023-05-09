@@ -54,5 +54,14 @@ namespace WebApiTransporte.Controllers
             return ActualizarSucursales;
 
         }
+
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteSucursalColaborador(Sucursal_ColaboradorDeleteDto sucursalcolaboradorDeleteDTO)
+        {
+            var BorrarSucursalesColaboradores = await _Sucursal_ColaboradorService.DeleteSucursalColaborador(sucursalcolaboradorDeleteDTO);
+
+            return BorrarSucursalesColaboradores;
+        }
     }
 }

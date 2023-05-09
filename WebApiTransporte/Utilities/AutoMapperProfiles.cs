@@ -36,6 +36,7 @@ namespace WebApiTransporte.Utilities
 
 
             CreateMap<Sucursal_ColaboradorDto, Sucursal_Colaborador>().ReverseMap();
+            CreateMap<Sucursal_ColaboradorDeleteDto, Sucursal_Colaborador>().ReverseMap();
 
 
             CreateMap<ViajeDto, Viaje>().ReverseMap();

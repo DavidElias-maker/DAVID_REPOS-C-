@@ -9,8 +9,10 @@ namespace WebApiTransporte.Services.Sucursal_ColaboradorServices
     {
         public Task<ActionResult<Sucursal_Colaborador>> PostSucursalColaborador(Sucursal_ColaboradorDto SucursalColaboradorDTO);
 
-        public  Task<List<SucursalColaboradorIInformation>> GetSucursalColaborador();
+        public Task<List<SucursalColaboradorIInformation>> GetSucursalColaborador();
 
         public Task<ActionResult> UpdateSucursalColaborador(Sucursal_ColaboradorDto sucursalcolaboradorDTO);
+
+        public Task<ActionResult> DeleteSucursalColaborador(Sucursal_ColaboradorDeleteDto sucursalcolaboradorDeleteDTO);
     }
 }
