@@ -40,7 +40,8 @@ namespace WebApiTransporte.Services.ViajeServices
             Viaje viaje = new Viaje();
             viaje.TransportistaId = transportistaId;
             viaje.Fecha = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-            _context.viaje.Add(viaje);
+            var viajes = _mapper.Map<Viaje>(viaje);
+            _context.viaje.Add(viajes);
             await _context.SaveChangesAsync();
 
             decimal total = 0;
@@ -49,7 +50,8 @@ namespace WebApiTransporte.Services.ViajeServices
                 Viaje_Detalle viaje_detalle = new Viaje_Detalle();
                 viaje_detalle.ViajeId = viaje.Id;
                 viaje_detalle.SucursalColaboradoresId = element.SucursalColaboradoresId;
-                _context.viaje_detalle.Add(viaje_detalle);
+                var viajes_detalles = _mapper.Map<Viaje_Detalle>(viaje_detalle);
+                _context.viaje_detalle.Add(viajes_detalles);
 
                 var DistanciaKm = (from f in _context.sucursal_colaborador
                                    where f.Id == viaje_detalle.SucursalColaboradoresId
